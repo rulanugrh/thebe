@@ -3,22 +3,32 @@ package service
 import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
+	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
 	"log"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type userService struct {
 	repository portRepo.UserRepository
+	validate *validator.Validate
 }
 
 func NewUserService(repo portRepo.UserRepository) portService.UserInterface {
 	return &userService{
 		repository: repo,
+		validate: validator.New(),
 	}
 }
 
 func(user *userService) Register(req domain.User) (*web.ResponseUser, error) {
+	errStruct := middleware.ValidateStruct(user.validate, req)
+	if errStruct != nil {
+		return nil, errStruct
+	}
+	
 	data, err := user.repository.Register(req)
 	if err != nil {
 		log.Printf("Cant register to repo user: %s", err.Error())

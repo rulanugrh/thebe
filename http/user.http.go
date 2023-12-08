@@ -149,9 +149,9 @@ func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	err := user.service.Delete(uint(id))
 	if err != nil {
 		log.Printf("Cannot delete account to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant delete",
+			Errors: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

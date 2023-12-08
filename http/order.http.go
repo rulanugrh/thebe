@@ -35,9 +35,9 @@ func(order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := order.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create order to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant create order",
+			Errors: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

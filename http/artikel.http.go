@@ -35,10 +35,11 @@ func(artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := artikel.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create artikel to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant create artikel",
+			Errors: err,
 		}
+		
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")

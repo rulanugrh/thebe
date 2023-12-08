@@ -115,10 +115,11 @@ func(event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 	data, err := event.service.Update(uint(id), req)
 	if err != nil {
 		log.Printf("Cannot update event to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant update event",
+			Errors: err,
 		}
+		
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
