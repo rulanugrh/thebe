@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface) error {
+func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface, event portHandler.EventInterface) error {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(middleware.CommonMiddleware)
 	router.HandleFunc("/register/", user.Register)
@@ -35,10 +35,15 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/role/{id}", role.Update)
 
 	// routing for artikel
-	routerGroup.HandleFunc("/role/", artikel.Create)
-	routerGroup.HandleFunc("/role/{id}", artikel.FindByID)
-	routerGroup.HandleFunc("/role/", artikel.FindAll)
-	routerGroup.HandleFunc("/role/{id}", artikel.Delete)
+	routerGroup.HandleFunc("/artikel/", artikel.Create)
+	routerGroup.HandleFunc("/artikel/{id}", artikel.FindByID)
+	routerGroup.HandleFunc("/artikel/", artikel.FindAll)
+	routerGroup.HandleFunc("/artikel/{id}", artikel.Delete)
+
+	// routing for role
+	routerGroup.HandleFunc("/event/", event.Create)
+	routerGroup.HandleFunc("/event/{id}", event.FindByID)
+	routerGroup.HandleFunc("/event/{id}", event.Update)
 
 
 	conf := config.GetConfig()
