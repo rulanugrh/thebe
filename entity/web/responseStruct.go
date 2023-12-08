@@ -24,6 +24,11 @@ type ResponseCreateRole struct {
 	User []ResponseUser `json:"user"`
 }
 
+type ResponseArtikel struct {
+	Title string `json:"title"`
+	Content string `json:"content"`
+}
+
 type ResponseOrder struct {
 	UUID string `json:"uuid"`
 	FName     string `json:"first_name"`

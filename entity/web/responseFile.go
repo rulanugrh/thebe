@@ -1,4 +1,4 @@
-package domain
+package web
 
 type FileHome struct {
 	Image       string `form:"image" validate:"required"`
@@ -19,7 +19,7 @@ type FileRakerda struct {
 }
 
 type PID struct {
-	Rundown  string    `form:"rundown" validate:"required"`
-	Poster   string    `form:"poster" validate:"required"`
-	Artikels []Artikel `json:"artikel"`
+	Rundown  string            `form:"rundown" validate:"required"`
+	Poster   string            `form:"poster" validate:"required"`
+	Artikels []ResponseArtikel `json:"artikel"`
 }
