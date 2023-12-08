@@ -52,6 +52,7 @@ type ResponseLogin struct {
 type ResponseEvent struct {
 	Name string `json:"name"`
 	Description string `json:"description"`
+	Price int `json:"price"`
 	Participant []ListParticipant `json:"participant"`
 	Delegasi []ListDelegasi `json:"delegasi"`
 }
