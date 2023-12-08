@@ -151,5 +151,6 @@ func(file *fileHandler) UploadSeminar(w http.ResponseWriter, r *http.Request) {
 }
 
 func(file *fileHandler) UploadRekarda(w http.ResponseWriter, r *http.Request) {}
+
 func(file *fileHandler) UploadPID(w http.ResponseWriter, r *http.Request) {}
 func(file *fileHandler) UploadPanitia(w http.ResponseWriter, r *http.Request)
