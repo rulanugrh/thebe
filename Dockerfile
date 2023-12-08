@@ -7,8 +7,8 @@ WORKDIR /app/run
 COPY . .
 
 RUN go mod tidy
-RUN go build -o server
+RUN go build -o main
 
-EXPOSE 8080
+EXPOSE 45000
 
-CMD [ "./server" ]
+CMD [ "./main" ]
