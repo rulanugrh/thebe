@@ -1,6 +1,9 @@
 package web
 
-import "time"
+import (
+	"html/template"
+	"time"
+)
 
 type ResponseUser struct {
 	FName     string `json:"first_name"`
@@ -26,7 +29,7 @@ type ResponseCreateRole struct {
 
 type ResponseArtikel struct {
 	Title string `json:"title"`
-	Content string `json:"content"`
+	Content template.HTML `json:"content"`
 }
 
 type ResponseOrder struct {
