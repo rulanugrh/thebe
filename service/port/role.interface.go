@@ -6,7 +6,7 @@ import (
 )
 
 type RoleInterface interface {
-	Create(req domain.Roles) (*web.ResponseRole, error)
+	Create(req domain.Roles) (*web.ResponseCreateRole, error)
 	FindByID(id uint) (*web.ResponseRole, error)
 	Update(id uint, req domain.Roles) (*web.ResponseRole, error)
 }
