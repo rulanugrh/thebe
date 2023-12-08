@@ -27,3 +27,7 @@ type ResponseOrder struct {
 	Telephone string `json:"telephone"`
 	TTL       time.Time `json:"tanggal_lahir"`
 }
+
+type ResponseLogin struct {
+	Token 	  string `json:"token"`
+}
