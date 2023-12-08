@@ -8,5 +8,7 @@ type Order struct {
 	Name string `json:"name" form:"name" validate:"required"`
 	UserID uint `json:"user_id" form:"user_id" validate:"required"`
 	UserDetail User `json:"user" form:"user" gorm:"foreignKey:UserID;reference:ID"`
-	ProductID uint `json:"product_id" form:"product_id" validate:"required"`
+	EventID uint `json:"event_id" form:"event_id" validate:"required"`
+	Events Event `json:"event" form:"event" gorm:"foreignKey:EventID;reference:ID"`
+
 }

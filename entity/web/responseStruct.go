@@ -48,3 +48,20 @@ type ResponseLogin struct {
 	Email     string `json:"email"`
 	Token 	  string `json:"token"`
 }
+
+type ResponseEvent struct {
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Participant []ListParticipant `json:"participant"`
+	Delegasi []ListDelegasi `json:"delegasi"`
+}
+
+type ListParticipant struct {
+	FName string `json:"first_name"`
+	LName string `json:"last_name"`
+}
+
+type ListDelegasi struct {
+	FName string `json:"first_name"`
+	LName string `json:"last_name"`
+}
