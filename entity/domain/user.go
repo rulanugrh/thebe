@@ -1,6 +1,10 @@
 package domain
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	// creating model for struct
@@ -12,4 +16,5 @@ type User struct {
 	Telephone string `json:"telephone" form:"telephone" validate:"required"`
 	RoleID uint `json:"role_id" form:"role_id" validate:"required"`
 	Role Roles `json:"role" gorm:"foreignKey:RoleID;reference:ID"`
+	TTL time.Time `json:"ttl" validate:"required"`
 }
