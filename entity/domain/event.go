@@ -8,7 +8,9 @@ type Event struct {
 	Description string                `json:"desc" form:"desc" validate:"required"`
 	Price 		int 				  `json:"price" form:"price" validate:"required"`
 	Participants []Order   			  `json:"participants" form:"participants" gorm:"many2many:joined"`
-	Delegasi []DelegasiParticipant `json:"delegasi" form:"delegasi" gorm:"polymorphic:Delegasi;"`
+	Rundown string `json:"rundown" form:"rundown"`
+	Materi string `json:"materi" form:"materi"`
+	FileTambahan string `json:"file_tambahan" form:"file_tambahan"`
 }
 
 type DelegasiParticipant struct {

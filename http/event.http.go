@@ -2,6 +2,8 @@ package handler
 
 import (
 	"be-project/entity/domain"
+	"be-project/helper"
+
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
 	portService "be-project/service/port"
@@ -26,6 +28,14 @@ func NewEventHandler(service portService.EventInterface) portHandler.EventInterf
 
 func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req domain.Event
+	
+	rundown := helper.ReadFormFile("rundown", "./file/rundown/", w, r)
+	materi := helper.ReadFormFile("materi", "./file/materi/", w, r)
+	fileTambahan := helper.ReadFormFile("file_tambahan", "./file/file_tambahan/", w, r)
+	req.Rundown = rundown
+	req.Materi = materi
+	req.FileTambahan = fileTambahan
+
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
