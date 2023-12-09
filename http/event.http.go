@@ -29,19 +29,21 @@ func NewEventHandler(service portService.EventInterface) portHandler.EventInterf
 func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req domain.Event
 	
-	rundown := helper.ReadFormFile("rundown", "./file/rundown/", w, r)
-	materi := helper.ReadFormFile("materi", "./file/materi/", w, r)
-	fileTambahan := helper.ReadFormFile("file_tambahan", "./file/file_tambahan/", w, r)
-	req.Rundown = rundown
-	req.Materi = materi
-	req.FileTambahan = fileTambahan
-
+	
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
 	}
 	
 	json.Unmarshal(body, &req)
+
+	rundown := helper.ReadFormFile("rundown", "./file/rundown/", w, r)
+	materi := helper.ReadFormFile("materi", "./file/materi/", w, r)
+	fileTambahan := helper.ReadFormFile("file_tambahan", "./file/file_tambahan/", w, r)
+	req.Rundown = rundown
+	req.Materi = materi
+	req.FileTambahan = fileTambahan
+	
 	data, err := event.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create event to service, because: %s", err.Error())
