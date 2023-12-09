@@ -10,4 +10,5 @@ type Order struct {
 	UserDetail User `json:"user" form:"user" gorm:"foreignKey:UserID;reference:ID"`
 	EventID uint `json:"event_id" form:"event_id" validate:"required"`
 	Events Event `json:"event" form:"event" gorm:"foreignKey:EventID;reference:ID"`
+	Delegasi []DelegasiParticipant `json:"delegasi" form:"delegasi" gorm:"polymorphic:Delegasi;"`
 }

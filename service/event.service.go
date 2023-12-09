@@ -51,21 +51,11 @@ func(event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
 		listParticipant = append(listParticipant, participant)
 	}
 
-	// var listDelegasi []web.ListDelegasi
-	// for _, res := range data.Delegasi {
-	// 	delegasi := web.ListDelegasi {
-	// 		FName: res.FName,
-	// 		LName: res.LName,
-	// 	}
-	// 	listDelegasi = append(listDelegasi, delegasi)
-	// }
-
 	response := web.ResponseEvent{
 		Name: data.Name,
 		Description: data.Description,
 		Price: data.Price,
 		Participant: listParticipant,
-		// Delegasi: listDelegasi,
 	}
 
 	return &response, nil

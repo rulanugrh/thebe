@@ -56,6 +56,27 @@ type ResponseEvent struct {
 	Description string `json:"description"`
 	Price int `json:"price"`
 	Participant []ListParticipant `json:"participant"`
+}
+
+type ResponseEventRekarda struct {
+	Name string `json:"name"`
+	Description string `json:"description"`
+	Price int `json:"price"`
+	Participant []ListParticipant `json:"participant"`
+	Delegasi []ListDelegasi `json:"delegasi"`
+}
+
+
+type ResponseOrderRekarda struct {
+	UUID string `json:"uuid"`
+	FName     string `json:"first_name"`
+	LName     string `json:"last_name"`
+	Email     string `json:"email"`
+	Address   string `json:"address"`
+	Telephone string `json:"telephone"`
+	TTL       time.Time `json:"tanggal_lahir"`
+	EventName string `json:"event_name"`
+	EventPrice int `json:"event_price"`
 	Delegasi []ListDelegasi `json:"delegasi"`
 }
 
@@ -67,6 +88,7 @@ type ListParticipant struct {
 type ListDelegasi struct {
 	FName string `json:"first_name"`
 	LName string `json:"last_name"`
+	Gender string `json:"gender"`
 }
 
 type ValidationList struct {

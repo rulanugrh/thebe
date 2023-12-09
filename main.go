@@ -11,7 +11,7 @@ import (
 
 func main() {
 	getDB := config.GetConnection()
-	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{})
+	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{})
 
 	orderRepository := repository.NewOrderRepository(getDB)
 	userRepository := repository.NewUserRepository(getDB)
