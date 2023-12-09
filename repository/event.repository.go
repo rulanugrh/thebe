@@ -30,7 +30,7 @@ func(event *eventRepository) Create(req domain.Event) (*domain.Event, error) {
 
 func(event *eventRepository) FindByID(id uint) (*domain.Event, error) {
 	var req domain.Event
-	err := event.db.Where("id = ?", id).Find(&req).Error
+	err := event.db.Preload("Participants.UserDetail").Where("id = ?", id).Find(&req).Error
 	if err != nil {
 		log.Printf("Cannot find event by this id, because: %s", err.Error())
 	}
@@ -43,6 +43,12 @@ func(event *eventRepository) Update(id uint, req domain.Event) (*domain.Event, e
 	err := event.db.Model(&req).Where("id = ?", id).Updates(&result).Error
 	if err != nil {
 		log.Printf("Cant update, because: %s", err.Error())
+	}
+
+	errPreload := event.db.Preload("Participants.UserDetail").Find(&req).Error
+	if errPreload != nil {
+		log.Printf("Cannot preload event, because: %s", err.Error())
+		return nil, errPreload
 	}
 
 	return &result, nil

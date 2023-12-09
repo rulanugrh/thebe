@@ -18,7 +18,7 @@ func NewUserRepository(db *gorm.DB) portRepo.UserRepository {
 }
 
 func (user *userRepository) Register(req domain.User) (*domain.User, error) {
-	err := user.db.Create(req).Error
+	err := user.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Can't create user, because: %s", err.Error())
 		return nil, err
@@ -30,7 +30,7 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 		return nil, errPreload
 	}
 
-	errAppend := user.db.Model(&req.Role).Association("user").Append(&req)
+	errAppend := user.db.Model(&req.Role).Association("Users").Append(&req)
 	if errAppend != nil {
 		log.Printf("Can't append user, because: %s", errAppend.Error())
 	}

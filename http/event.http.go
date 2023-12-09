@@ -44,8 +44,8 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -59,8 +59,8 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
@@ -80,8 +80,8 @@ func(event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -95,8 +95,8 @@ func(event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -125,8 +125,8 @@ func(event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -140,6 +140,6 @@ func(event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)	
+	w.Write(result)
 }

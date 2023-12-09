@@ -3,32 +3,22 @@ package service
 import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
-	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
 	"log"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type eventService struct {
 	repository portRepo.EventInterface
-	validate *validator.Validate
 }
 
 func NewEventServices(repository portRepo.EventInterface) portService.EventInterface {
 	return &eventService{
 		repository: repository,
-		validate: validator.New(),
 	}
 }
 
-func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {
-	errStruct := middleware.ValidateStruct(event.validate, req)
-	if errStruct != nil {
-		return nil, errStruct
-	}
-	
+func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {	
 	data, err := event.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create event, because: %s", err.Error())
@@ -52,7 +42,7 @@ func(event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
 	}
 
 	var listParticipant []web.ListParticipant
-	for _, res := range data.Participant {
+	for _, res := range data.Participants {
 		participant := web.ListParticipant{
 			FName: res.UserDetail.FName,
 			LName: res.UserDetail.LName,
@@ -61,21 +51,21 @@ func(event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
 		listParticipant = append(listParticipant, participant)
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi {
-			FName: res.FName,
-			LName: res.LName,
-		}
-		listDelegasi = append(listDelegasi, delegasi)
-	}
+	// var listDelegasi []web.ListDelegasi
+	// for _, res := range data.Delegasi {
+	// 	delegasi := web.ListDelegasi {
+	// 		FName: res.FName,
+	// 		LName: res.LName,
+	// 	}
+	// 	listDelegasi = append(listDelegasi, delegasi)
+	// }
 
 	response := web.ResponseEvent{
 		Name: data.Name,
 		Description: data.Description,
 		Price: data.Price,
 		Participant: listParticipant,
-		Delegasi: listDelegasi,
+		// Delegasi: listDelegasi,
 	}
 
 	return &response, nil
@@ -89,7 +79,7 @@ func(event *eventService) Update(id uint, req domain.Event) (*web.ResponseEvent,
 	}
 
 	var listParticipant []web.ListParticipant
-	for _, res := range data.Participant {
+	for _, res := range data.Participants {
 		participant := web.ListParticipant{
 			FName: res.UserDetail.FName,
 			LName: res.UserDetail.LName,
@@ -98,21 +88,21 @@ func(event *eventService) Update(id uint, req domain.Event) (*web.ResponseEvent,
 		listParticipant = append(listParticipant, participant)
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi {
-			FName: res.FName,
-			LName: res.LName,
-		}
-		listDelegasi = append(listDelegasi, delegasi)
-	}
+	// var listDelegasi []web.ListDelegasi
+	// for _, res := range data.Delegasi {
+	// 	delegasi := web.ListDelegasi {
+	// 		FName: res.FName,
+	// 		LName: res.LName,
+	// 	}
+	// 	listDelegasi = append(listDelegasi, delegasi)
+	// }
 
 	response := web.ResponseEvent{
 		Name: data.Name,
 		Description: data.Description,
 		Price: data.Price,
 		Participant: listParticipant,
-		Delegasi: listDelegasi,
+		// Delegasi: listDelegasi,
 	}
 
 	return &response, nil

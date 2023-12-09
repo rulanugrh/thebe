@@ -44,8 +44,8 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
-		w.WriteHeader(http.StatusBadRequest)
+	w.Write(result)
+	w.WriteHeader(http.StatusBadRequest)
 	}
 
 	response := web.ResponseSuccess {
@@ -59,8 +59,8 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 
 }
 func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
@@ -83,8 +83,8 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -98,8 +98,8 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -122,8 +122,8 @@ func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -137,8 +137,8 @@ func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
@@ -158,8 +158,8 @@ func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -173,7 +173,7 @@ func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 
 }

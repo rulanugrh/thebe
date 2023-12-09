@@ -19,7 +19,7 @@ func NewRoleRepository(db *gorm.DB) portRepo.RoleRepository {
 }
 
 func(role *roleRepository) Create(req domain.Roles) (*domain.Roles, error) {
-	err := role.db.Create(req).Error
+	err := role.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cant create role, because: %s", err.Error())
 		return nil, err

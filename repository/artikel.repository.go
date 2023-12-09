@@ -19,7 +19,7 @@ func NewArtikelRepository(db *gorm.DB) portRepo.ArtikelInterface {
 }
 
 func(artikel *artikelRepository) Create(req domain.Artikel) (*domain.Artikel, error) {
-	err := artikel.db.Create(req).Error
+	err := artikel.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cannot create artikel in repo: %s", err.Error())
 		return nil, err

@@ -35,17 +35,17 @@ func(role *roleHandler) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := role.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create role to service, because: %s", err.Error())
-		response := web.WebValidationError{
+		response := web.ResponseFailure{
 			Message: "You cant create role",
-			Errors: err,
+			Code: http.StatusInternalServerError,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -59,8 +59,8 @@ func(role *roleHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
@@ -80,8 +80,8 @@ func(role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -95,8 +95,8 @@ func(role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -124,8 +124,8 @@ func(role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -139,6 +139,6 @@ func(role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }

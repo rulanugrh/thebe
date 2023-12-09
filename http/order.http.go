@@ -44,8 +44,8 @@ func(order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -59,8 +59,8 @@ func(order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
@@ -80,8 +80,8 @@ func(order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
-		w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -95,8 +95,8 @@ func(order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +138,6 @@ func(order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }

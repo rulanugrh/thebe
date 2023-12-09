@@ -3,32 +3,22 @@ package service
 import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
-	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
 	"log"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type orderService struct {
 	repository portRepo.OrderRepository
-	validate *validator.Validate
 }
 
 func NewOrderService(repo portRepo.OrderRepository) portService.OrderInterface {
 	return &orderService{
 		repository: repo,
-		validate: validator.New(),
 	}
 }
 
-func(order *orderService) Create(req domain.Order) (*web.ResponseOrder, error) {
-	errStruct := middleware.ValidateStruct(order.validate, req)
-	if errStruct != nil {
-		return nil, errStruct
-	}
-	
+func(order *orderService) Create(req domain.Order) (*web.ResponseOrder, error) {	
 	data, err := order.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant req order to repo, because: %s", err.Error())
@@ -41,6 +31,9 @@ func(order *orderService) Create(req domain.Order) (*web.ResponseOrder, error) {
 		LName: data.UserDetail.LName,
 		Email: data.UserDetail.Email,
 		Address: data.UserDetail.Address,
+		Telephone: data.UserDetail.Telephone,
+		EventName: data.Events.Name,
+		EventPrice: data.Events.Price,
 		TTL: data.UserDetail.TTL,
 	}
 

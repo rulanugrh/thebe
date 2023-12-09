@@ -45,8 +45,8 @@ func(artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -60,9 +60,8 @@ func(artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
-
+	w.Write(result)
 
 }
 
@@ -83,8 +82,8 @@ func(artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -98,8 +97,8 @@ func(artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
@@ -115,8 +114,8 @@ func(artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -130,8 +129,8 @@ func(artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
@@ -151,8 +150,8 @@ func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.Write(result)
-		w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -166,6 +165,6 @@ func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
 	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }

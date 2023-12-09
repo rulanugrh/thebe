@@ -11,39 +11,39 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface, event portHandler.EventInterface) error {
+func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface, event portHandler.EventInterface) {
 	router := mux.NewRouter().StrictSlash(true)
-	router.Use(middleware.CommonMiddleware)
-	router.HandleFunc("/register/", user.Register)
-	router.HandleFunc("/login/", user.Login)
+	router.Use(CommonMiddleware)
+	router.HandleFunc("/register/", user.Register).Methods("POST")
+	router.HandleFunc("/login/", user.Login).Methods("POST")
 
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.CommonMiddleware)
 
 	// routing for user
-	routerGroup.HandleFunc("/user/", user.Update)
-	routerGroup.HandleFunc("/user/{id}", user.Delete)
+	routerGroup.HandleFunc("/user/", user.Update).Methods("PUT")
+	routerGroup.HandleFunc("/user/{id}", user.Delete).Methods("DELETE")
 
 	// routing for order
-	routerGroup.HandleFunc("/order/", order.Create)
-	routerGroup.HandleFunc("/order/{user_id}", order.FindByUserID)
-	routerGroup.HandleFunc("/order/{id}", order.Update)
+	routerGroup.HandleFunc("/order/", order.Create).Methods("POST")
+	routerGroup.HandleFunc("/order/{user_id}", order.FindByUserID).Methods("GET")
+	routerGroup.HandleFunc("/order/{id}", order.Update).Methods("PUT")
 
 	// routing for role
-	routerGroup.HandleFunc("/role/", role.Create)
-	routerGroup.HandleFunc("/role/{id}", role.FindByID)
-	routerGroup.HandleFunc("/role/{id}", role.Update)
+	routerGroup.HandleFunc("/role/", role.Create).Methods("POST")
+	routerGroup.HandleFunc("/role/{id}", role.FindByID).Methods("GET")
+	routerGroup.HandleFunc("/role/{id}", role.Update).Methods("PUT")
 
 	// routing for artikel
-	routerGroup.HandleFunc("/artikel/", artikel.Create)
-	routerGroup.HandleFunc("/artikel/{id}", artikel.FindByID)
-	routerGroup.HandleFunc("/artikel/", artikel.FindAll)
-	routerGroup.HandleFunc("/artikel/{id}", artikel.Delete)
+	routerGroup.HandleFunc("/artikel/", artikel.Create).Methods("POST")
+	routerGroup.HandleFunc("/artikel/{id}", artikel.FindByID).Methods("GET")
+	routerGroup.HandleFunc("/artikel/", artikel.FindAll).Methods("GET")
+	routerGroup.HandleFunc("/artikel/{id}", artikel.Delete).Methods("DELETE")
 
 	// routing for role
-	routerGroup.HandleFunc("/event/", event.Create)
-	routerGroup.HandleFunc("/event/{id}", event.FindByID)
-	routerGroup.HandleFunc("/event/{id}", event.Update)
+	routerGroup.HandleFunc("/event/", event.Create).Methods("POST")
+	routerGroup.HandleFunc("/event/{id}", event.FindByID).Methods("GET")
+	routerGroup.HandleFunc("/event/{id}", event.Update).Methods("PUT")
 
 
 	conf := config.GetConfig()
@@ -55,13 +55,16 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	}
 
 
-	err := server.ListenAndServe()
-	if err != nil {
-		log.Printf("Cannot running http server, because: %s", err.Error())
-		return err
-	}
-
 	log.Printf("Server running at: %v", host)
-	return nil
+	server.ListenAndServe()
+}
 
+func CommonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Request-Headers, Access-Control-Request-Method, Connection, Host, Origin, User-Agent, Referer, Cache-Control, X-header")
+		next.ServeHTTP(w, r)
+	})
 }

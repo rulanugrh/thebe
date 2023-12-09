@@ -22,19 +22,19 @@ func NewOrderRepository(db *gorm.DB) portRepo.OrderRepository {
 func(order *orderRepository) Create(req domain.Order) (*domain.Order, error) {
 	req.UUID = uuid.New().String()
 
-	err := order.db.Create(req).Error
+	err := order.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cant creaet order. because: %s", err.Error())
 		return nil, err
 	}
 
-	errsPreload := order.db.Preload("UserDetail").Preload("Events").Error
+	errsPreload := order.db.Preload("UserDetail").Preload("Events").Find(&req).Error
 	if errsPreload != nil {
 		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
 		return nil, errsPreload
 	}
 
-	errAppend := order.db.Model(&req.Events).Association("Participant").Append(&req)
+	errAppend := order.db.Model(&req.Events).Association("Participants").Append(&req)
 	if errAppend != nil {
 		log.Printf("Cant append data because: %s", errAppend.Error())
 	}

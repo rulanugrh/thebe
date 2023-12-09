@@ -3,32 +3,22 @@ package service
 import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
-	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
 	"log"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type artikelService struct {
 	repository portRepo.ArtikelInterface
-	validate *validator.Validate
 }
 
 func NewArtikelService(repo portRepo.ArtikelInterface) portService.ArtikelInterface {
 	return &artikelService{
 		repository: repo,
-		validate: validator.New(),
 	}
 }
 
-func(artikel *artikelService) Create(req domain.Artikel) (*web.ResponseArtikel, error) {
-	errStruct := middleware.ValidateStruct(artikel.validate, req)
-	if errStruct != nil {
-		return nil, errStruct
-	}
-	
+func(artikel *artikelService) Create(req domain.Artikel) (*web.ResponseArtikel, error) {	
 	data, err := artikel.repository.Create(req)
 	if err != nil {
 		log.Printf("Cannot create artikel in service: %s", err.Error())

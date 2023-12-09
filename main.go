@@ -7,12 +7,11 @@ import (
 	"be-project/repository"
 	"be-project/routes"
 	"be-project/service"
-	"log"
 )
 
 func main() {
 	getDB := config.GetConnection()
-	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{})
+	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{})
 
 	orderRepository := repository.NewOrderRepository(getDB)
 	userRepository := repository.NewUserRepository(getDB)
@@ -32,8 +31,5 @@ func main() {
 	artikelHandler := handler.NewArtikelHandler(artikelService)
 	eventHandler := handler.NewEventHandler(eventService)
 
-	err := routes.Run(userHandler, orderHandler, roleHandler, artikelHandler, eventHandler)
-	if err != nil {
-		log.Printf("Cannot running , because: %s", err.Error())
-	}
+	routes.Run(userHandler, orderHandler, roleHandler, artikelHandler, eventHandler)
 }

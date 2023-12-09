@@ -1,5 +1,19 @@
 version: '3'
 services:
+  db:
+    image: postgres:alpine
+    container_name: postgresdb
+    hostname: db
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASS}
+      - POSTGRES_DB=${DATABASE_NAME}
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    networks:
+      - connection
+  
   app:
     container_name: be-project
     environment:
@@ -17,27 +31,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - 45000:45000
     volumes:
       - ./app
     depends_on:
-      - postgresdb
-    networks:
-      - connection
-  
-  postgresdb:
-    image: postgres:latest
-    container_name: db-be
-    environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASS}
-      - POSTGRES_DB=${DATABASE_NAME}
-      - DATABASE_HOST=${DATABASE_HOST}
-    restart: always
-    ports:
-      - 5432:532
+      - db
     networks:
       - connection
 

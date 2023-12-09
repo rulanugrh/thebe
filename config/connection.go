@@ -34,15 +34,15 @@ type Config struct {
 	}
 }
 var app *Config
-
+var DB *gorm.DB
 func GetConnection() *gorm.DB {
 	conf := GetConfig()
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", 
-		conf.Database.Host,
+	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable&TimeZone=Asia/Shanghai", 
 		conf.Database.User,
 		conf.Database.Pass,
-		conf.Database.Name,
+		conf.Database.Host,
 		conf.Database.Port,
+		conf.Database.Name,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -51,6 +51,8 @@ func GetConnection() *gorm.DB {
 		return nil
 	}
 
+	log.Print("Success connect to database")
+	DB = db
 	return db
 }
 
