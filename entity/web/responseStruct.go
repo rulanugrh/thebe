@@ -55,9 +55,6 @@ type ResponseEvent struct {
 	Name string `json:"name" form:"name"`
 	Description string `json:"description" form:"description"`
 	Price int `json:"price" form:"price"`
-	Rundown string `json:"rundown" form:"rundown"`
-	Materi string `json:"materi" form:"materi"`
-	FileTambahan string `json:"file_tambahan" form:"file_tambahan"`
 	Participant []ListParticipant `json:"participant" form:"participant"`
 }
 
@@ -65,9 +62,6 @@ type ResponseEventRekarda struct {
 	Name string `json:"name"`
 	Description string `json:"description"`
 	Price int `json:"price"`
-	Rundown string `json:"rundown"`
-	Materi string `json:"materi"`
-	FileTambahan string `json:"file_tambahan"`
 	Participant []ListParticipant `json:"participant"`
 	Delegasi []ListDelegasi `json:"delegasi"`
 }

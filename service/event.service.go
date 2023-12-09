@@ -18,7 +18,7 @@ func NewEventServices(repository portRepo.EventInterface) portService.EventInter
 	}
 }
 
-func(event *eventService) Create(req domain.Event) (interface{}, error) {	
+func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {	
 	data, err := event.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create event, because: %s", err.Error())
@@ -67,9 +67,6 @@ func(event *eventService) FindByID(id uint) (interface{}, error) {
 			Name: data.Name,
 			Description: data.Description,
 			Price: data.Price,
-			FileTambahan: data.FileTambahan,
-			Rundown: data.Rundown,
-			Materi: data.Materi,
 			Participant: listParticipant,
 			Delegasi: listDelegasi,
 		}
@@ -80,9 +77,6 @@ func(event *eventService) FindByID(id uint) (interface{}, error) {
 			Name: data.Name,
 			Description: data.Description,
 			Price: data.Price,
-			FileTambahan: data.FileTambahan,
-			Rundown: data.Rundown,
-			Materi: data.Materi,
 			Participant: listParticipant,
 			
 		}
@@ -118,16 +112,12 @@ func(event *eventService) Update(id uint, req domain.Event) (interface{}, error)
 			listDelegasi = append(listDelegasi, delegasi)
 		}
 	}
-
 	
 	if id == 2 {
 		response := web.ResponseEventRekarda{
 			Name: data.Name,
 			Description: data.Description,
 			Price: data.Price,
-			FileTambahan: data.FileTambahan,
-			Rundown: data.Rundown,
-			Materi: data.Materi,
 			Participant: listParticipant,
 			Delegasi: listDelegasi,
 		}
@@ -138,9 +128,6 @@ func(event *eventService) Update(id uint, req domain.Event) (interface{}, error)
 			Name: data.Name,
 			Description: data.Description,
 			Price: data.Price,
-			FileTambahan: data.FileTambahan,
-			Rundown: data.Rundown,
-			Materi: data.Materi,
 			Participant: listParticipant,
 		}
 	
