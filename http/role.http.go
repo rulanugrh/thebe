@@ -91,9 +91,9 @@ func(role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

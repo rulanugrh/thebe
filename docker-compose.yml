@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   db:
     image: postgres:alpine
@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=${DATABASE_NAME}
     restart: unless-stopped
     ports:
-      - 5432:5432
+      - "127.0.0.1:5432:5432"
     networks:
       - connection
   
@@ -34,8 +34,6 @@ services:
     restart: unless-stopped
     ports:
       - 45000:45000
-    volumes:
-      - ./app
     depends_on:
       - db
     networks:
