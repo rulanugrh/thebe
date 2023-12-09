@@ -28,6 +28,17 @@ func(order *orderRepository) Create(req domain.Order) (*domain.Order, error) {
 		return nil, err
 	}
 
+	errsPreload := order.db.Preload("UserDetail").Preload("Events").Error
+	if errsPreload != nil {
+		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
+		return nil, errsPreload
+	}
+
+	errAppend := order.db.Model(&req.Events).Association("Participant").Append(&req)
+	if errAppend != nil {
+		log.Printf("Cant append data because: %s", errAppend.Error())
+	}
+
 	return &req, nil
 }
 
@@ -40,12 +51,18 @@ func(order *orderRepository) Update(uuid string, req domain.Order) (*domain.Orde
 		return nil, err
 	}
 
+	errsPreload := order.db.Preload("UserDetail").Preload("Events").Error
+	if errsPreload != nil {
+		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
+		return nil, errsPreload
+	}
+
 	return &updateOrder, nil
 }
 
 func(order *orderRepository) FindByUserID(userID uint) (*domain.Order, error) {
 	var orderFind domain.Order
-	err := order.db.Preload("UserDetail").Where("user_id = ?", userID).Find(&orderFind).Error
+	err := order.db.Preload("UserDetail").Preload("Events").Where("user_id = ?", userID).Find(&orderFind).Error
 
 	if err != nil {
 		log.Printf("Cant find order with this user id: %s", err.Error())

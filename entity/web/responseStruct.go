@@ -40,6 +40,8 @@ type ResponseOrder struct {
 	Address   string `json:"address"`
 	Telephone string `json:"telephone"`
 	TTL       time.Time `json:"tanggal_lahir"`
+	EventName string `json:"event_name"`
+	EventPrice int `json:"event_price"`
 }
 
 type ResponseLogin struct {
