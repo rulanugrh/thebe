@@ -2,7 +2,6 @@ package main
 
 import (
 	"be-project/config"
-	"be-project/entity/domain"
 	handler "be-project/http"
 	"be-project/repository"
 	"be-project/routes"
@@ -10,9 +9,7 @@ import (
 )
 
 func main() {
-	getDB := config.GetConnection()
-	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{})
-
+	getDB := config.RunMigration()
 	orderRepository := repository.NewOrderRepository(getDB)
 	userRepository := repository.NewUserRepository(getDB)
 	roleRepository := repository.NewRoleRepository(getDB)

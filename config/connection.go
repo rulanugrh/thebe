@@ -1,6 +1,7 @@
 package config
 
 import (
+	"be-project/entity/domain"
 	"fmt"
 	"log"
 	"os"
@@ -53,6 +54,13 @@ func GetConnection() *gorm.DB {
 
 	log.Print("Success connect to database")
 	return db
+}
+
+func RunMigration() *gorm.DB {
+	getDB := GetConnection()
+	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{})
+
+	return getDB
 }
 
 func GetConfig() *Config {
