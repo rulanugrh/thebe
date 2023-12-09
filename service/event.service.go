@@ -18,7 +18,7 @@ func NewEventServices(repository portRepo.EventInterface) portService.EventInter
 	}
 }
 
-func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {	
+func(event *eventService) Create(req domain.Event) (interface{}, error) {	
 	data, err := event.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create event, because: %s", err.Error())
@@ -34,7 +34,7 @@ func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {
 	return &response, nil
 }
 
-func(event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
+func(event *eventService) FindByID(id uint) (interface{}, error) {
 	data, err := event.repository.FindByID(id)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
@@ -51,17 +51,40 @@ func(event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
 		listParticipant = append(listParticipant, participant)
 	}
 
-	response := web.ResponseEvent{
-		Name: data.Name,
-		Description: data.Description,
-		Price: data.Price,
-		Participant: listParticipant,
-	}
+	var listDelegasi []web.ListDelegasi
+	for _, resDelegasi := range data.Delegasi {
+		delegasi := web.ListDelegasi {
+			FName: resDelegasi.FName,
+			LName: resDelegasi.LName,
+			Gender: resDelegasi.Gender,
+		}
 
-	return &response, nil
+		listDelegasi = append(listDelegasi, delegasi)
+	}
+	if id == 2 {
+		response := web.ResponseEventRekarda{
+			Name: data.Name,
+			Description: data.Description,
+			Price: data.Price,
+			Participant: listParticipant,
+			Delegasi: listDelegasi,
+		}
+	
+		return &response, nil
+	} else {
+		response := web.ResponseEvent{
+			Name: data.Name,
+			Description: data.Description,
+			Price: data.Price,
+			Participant: listParticipant,
+		}
+	
+		return &response, nil
+	}
+	
 }
 
-func(event *eventService) Update(id uint, req domain.Event) (*web.ResponseEvent, error) {
+func(event *eventService) Update(id uint, req domain.Event) (interface{}, error) {
 	data, err := event.repository.Update(id, req)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
@@ -78,22 +101,34 @@ func(event *eventService) Update(id uint, req domain.Event) (*web.ResponseEvent,
 		listParticipant = append(listParticipant, participant)
 	}
 
-	// var listDelegasi []web.ListDelegasi
-	// for _, res := range data.Delegasi {
-	// 	delegasi := web.ListDelegasi {
-	// 		FName: res.FName,
-	// 		LName: res.LName,
-	// 	}
-	// 	listDelegasi = append(listDelegasi, delegasi)
-	// }
+	var listDelegasi []web.ListDelegasi
+	for _, resDelegasi := range data.Delegasi {
+		delegasi := web.ListDelegasi {
+			FName: resDelegasi.FName,
+			LName: resDelegasi.LName,
+			Gender: resDelegasi.Gender,
+		}
 
-	response := web.ResponseEvent{
-		Name: data.Name,
-		Description: data.Description,
-		Price: data.Price,
-		Participant: listParticipant,
-		// Delegasi: listDelegasi,
+		listDelegasi = append(listDelegasi, delegasi)
 	}
-
-	return &response, nil
+	if id == 2 {
+		response := web.ResponseEventRekarda{
+			Name: data.Name,
+			Description: data.Description,
+			Price: data.Price,
+			Participant: listParticipant,
+			Delegasi: listDelegasi,
+		}
+	
+		return &response, nil
+	} else {
+		response := web.ResponseEvent{
+			Name: data.Name,
+			Description: data.Description,
+			Price: data.Price,
+			Participant: listParticipant,
+		}
+	
+		return &response, nil
+	}
 }

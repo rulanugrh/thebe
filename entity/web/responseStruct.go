@@ -66,7 +66,6 @@ type ResponseEventRekarda struct {
 	Delegasi []ListDelegasi `json:"delegasi"`
 }
 
-
 type ResponseOrderRekarda struct {
 	UUID string `json:"uuid"`
 	FName     string `json:"first_name"`
