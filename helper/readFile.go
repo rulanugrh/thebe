@@ -1,65 +1,42 @@
 package helper
 
 import (
-	"be-project/entity/web"
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"time"
 )
 
-func ReadFormFile(form string, path string, w http.ResponseWriter ,r *http.Request) string {
-	const MAX_UPLOAD_FILE_SIZE = 2048 * 2048
+func ReadFormFile(Form string, Path string, w http.ResponseWriter ,r http.Request) string {
+	const MAX_UPLOAD_FILE_SIZE = 16 * 1024 * 1024
 	
-	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_FILE_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_FILE_SIZE); err != nil {
-		response := web.ResponseFailure{
-			Message: "File is to big",
-			Code: http.StatusBadRequest,
-		}
-
-		result, _ := json.Marshal(response)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(result)
+		log.Printf("Cannot upload because file to big, %s", err.Error())
 	}
 
-	file, fileHeader, errForm := r.FormFile(form)
-	if errForm != nil {
-		response := web.ResponseFailure{
-			Message: "Cannot upload with this form",
-			Code: http.StatusBadRequest,
-		}
+	buf := make([]byte, 1024)
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
 
-		result, _ := json.Marshal(response)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(result)
-	}
-
-	errCreate := os.MkdirAll(path, os.ModePerm)
+	errCreate := os.MkdirAll(Path, os.ModePerm)
 	if errCreate != nil {
-		log.Printf("Cannot create folder")
+		log.Printf("Cannot create folder: %s", errCreate.Error())
 	}
 
-	fileName := fmt.Sprintf("%s/%d-%s", path, time.Now().UnixNano(), fileHeader.Filename)
-	dst, err := os.Create(fileName)
+	FileName := fmt.Sprintf("%s/%d", Path, time.Now().UnixNano())
+	part, err := writer.CreateFormFile(Path, FileName)
 	if err != nil {
-		response := web.ResponseFailure{
-			Message: "Cannot upload file",
-			Code: http.StatusBadRequest,
-		}
-
-		result, _ := json.Marshal(response)
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(result)
+		log.Printf("Cannot create because file to big, %s", err.Error())
 	}
-	defer dst.Close()
-	_, err = io.Copy(dst, file)
+
+	_, err = io.Copy(part, bytes.NewReader(buf))
 	if err != nil {
 		log.Printf("Cant coppy files, because: %s", err.Error())
 	}
 
-	return fileName
+	return FileName
 }

@@ -29,6 +29,12 @@ func NewEventHandler(service portService.EventInterface) portHandler.EventInterf
 func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req domain.Event
 	
+	rundown := helper.ReadFormFile("rundown", "./file/rundown/", w, *r)
+	materi := helper.ReadFormFile("materi", "./file/materi/", w, *r)
+	fileTambahan := helper.ReadFormFile("file_tambahan", "./file/file_tambahan/", w, *r)
+	req.Rundown = rundown
+	req.Materi = materi
+	req.FileTambahan = fileTambahan
 	
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
@@ -37,12 +43,6 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 	
 	json.Unmarshal(body, &req)
 
-	rundown := helper.ReadFormFile("rundown", "./file/rundown/", w, r)
-	materi := helper.ReadFormFile("materi", "./file/materi/", w, r)
-	fileTambahan := helper.ReadFormFile("file_tambahan", "./file/file_tambahan/", w, r)
-	req.Rundown = rundown
-	req.Materi = materi
-	req.FileTambahan = fileTambahan
 	
 	data, err := event.service.Create(req)
 	if err != nil {
@@ -58,6 +58,7 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+		return 
 	}
 
 	response := web.ResponseSuccess {
@@ -72,7 +73,7 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 		}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(result)
+	w.Write(result) 
 }
 
 func(event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
