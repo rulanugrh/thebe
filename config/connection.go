@@ -61,7 +61,7 @@ func GetConnection() *gorm.DB {
 
 func RunMigration() *gorm.DB {
 	getDB := GetConnection()
-	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{})
+	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
 
 	return getDB
 }
