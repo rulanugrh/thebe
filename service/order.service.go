@@ -13,23 +13,23 @@ import (
 
 type orderService struct {
 	repository portRepo.OrderRepository
-	validate *validator.Validate
+	validate   *validator.Validate
 }
 
 func NewOrderService(repo portRepo.OrderRepository) portService.OrderInterface {
 	return &orderService{
 		repository: repo,
-		validate: validator.New(),
+		validate:   validator.New(),
 	}
 }
 
-func(order *orderService) Create(req domain.Order) (interface{}, error) {	
+func (order *orderService) Create(req domain.Order) (interface{}, error) {
 	errValidate := middleware.ValidateStruct(order.validate, req)
 	if errValidate != nil {
 		log.Printf("Struct is not valid: %s", errValidate.Error())
 		return nil, errValidate
 	}
-	
+
 	data, err := order.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant req order to repo, because: %s", err.Error())
@@ -37,12 +37,11 @@ func(order *orderService) Create(req domain.Order) (interface{}, error) {
 	}
 
 	var listDelegasi []web.ListDelegasi
-	for _ , res := range data.Delegasi {
-		delegasi := web.ListDelegasi {
-			FName: res.FName,
-			LName: res.LName,
+	for _, res := range data.Delegasi {
+		delegasi := web.ListDelegasi{
+			FName:  res.FName,
+			LName:  res.LName,
 			Gender: res.Gender,
-			
 		}
 
 		listDelegasi = append(listDelegasi, delegasi)
@@ -50,36 +49,36 @@ func(order *orderService) Create(req domain.Order) (interface{}, error) {
 
 	if req.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
-			Delegasi: listDelegasi,
+			Delegasi:   listDelegasi,
 		}
 
 		return &resultData, nil
-		
+
 	} else {
 		resultData := web.ResponseOrder{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
 		}
-	
+
 		return &resultData, nil
 	}
 }
 
-func(order *orderService) Update(uuid string, req domain.Order) (interface{}, error) {
+func (order *orderService) Update(uuid string, req domain.Order) (interface{}, error) {
 	data, err := order.repository.Update(uuid, req)
 	if err != nil {
 		log.Printf("Cant req update to repo, because: %s", err.Error())
@@ -87,12 +86,11 @@ func(order *orderService) Update(uuid string, req domain.Order) (interface{}, er
 	}
 
 	var listDelegasi []web.ListDelegasi
-	for _ , res := range data.Delegasi {
-		delegasi := web.ListDelegasi {
-			FName: res.FName,
-			LName: res.LName,
+	for _, res := range data.Delegasi {
+		delegasi := web.ListDelegasi{
+			FName:  res.FName,
+			LName:  res.LName,
 			Gender: res.Gender,
-			
 		}
 
 		listDelegasi = append(listDelegasi, delegasi)
@@ -100,36 +98,36 @@ func(order *orderService) Update(uuid string, req domain.Order) (interface{}, er
 
 	if req.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
-			Delegasi: listDelegasi,
+			Delegasi:   listDelegasi,
 		}
 
 		return &resultData, nil
-		
+
 	} else {
 		resultData := web.ResponseOrder{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
 		}
-	
+
 		return &resultData, nil
 	}
 }
 
-func(order *orderService) FindByUserID(userid uint) (interface{}, error) {
+func (order *orderService) FindByUserID(userid uint) (interface{}, error) {
 	data, err := order.repository.FindByUserID(userid)
 	if err != nil {
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
@@ -137,12 +135,11 @@ func(order *orderService) FindByUserID(userid uint) (interface{}, error) {
 	}
 
 	var listDelegasi []web.ListDelegasi
-	for _ , res := range data.Delegasi {
-		delegasi := web.ListDelegasi {
-			FName: res.FName,
-			LName: res.LName,
+	for _, res := range data.Delegasi {
+		delegasi := web.ListDelegasi{
+			FName:  res.FName,
+			LName:  res.LName,
 			Gender: res.Gender,
-			
 		}
 
 		listDelegasi = append(listDelegasi, delegasi)
@@ -150,31 +147,31 @@ func(order *orderService) FindByUserID(userid uint) (interface{}, error) {
 
 	if data.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
-			Delegasi: listDelegasi,
+			Delegasi:   listDelegasi,
 		}
 
 		return &resultData, nil
-		
+
 	} else {
 		resultData := web.ResponseOrder{
-			UUID: data.UUID,
-			FName: data.UserDetail.FName,
-			LName: data.UserDetail.LName,
-			Email: data.UserDetail.Email,
-			Address: data.UserDetail.Address,
-			Telephone: data.UserDetail.Telephone,
-			EventName: data.Events.Name,
+			UUID:       data.UUID,
+			FName:      data.UserDetail.FName,
+			LName:      data.UserDetail.LName,
+			Email:      data.UserDetail.Email,
+			Address:    data.UserDetail.Address,
+			Telephone:  data.UserDetail.Telephone,
+			EventName:  data.Events.Name,
 			EventPrice: data.Events.Price,
 		}
-	
+
 		return &resultData, nil
 	}
 }

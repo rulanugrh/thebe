@@ -18,7 +18,7 @@ func NewArtikelRepository(db *gorm.DB) portRepo.ArtikelInterface {
 	}
 }
 
-func(artikel *artikelRepository) Create(req domain.Artikel) (*domain.Artikel, error) {
+func (artikel *artikelRepository) Create(req domain.Artikel) (*domain.Artikel, error) {
 	err := artikel.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cannot create artikel in repo: %s", err.Error())
@@ -28,7 +28,7 @@ func(artikel *artikelRepository) Create(req domain.Artikel) (*domain.Artikel, er
 	return &req, nil
 }
 
-func(artikel *artikelRepository) FindByID(id uint) (*domain.Artikel, error) {
+func (artikel *artikelRepository) FindByID(id uint) (*domain.Artikel, error) {
 	var models domain.Artikel
 	err := artikel.db.Where("id = ?", id).Find(&models).Error
 	if err != nil {
@@ -39,18 +39,18 @@ func(artikel *artikelRepository) FindByID(id uint) (*domain.Artikel, error) {
 	return &models, nil
 }
 
-func(artikel *artikelRepository) FindAll() ([]domain.Artikel, error) {
+func (artikel *artikelRepository) FindAll() ([]domain.Artikel, error) {
 	var artikels []domain.Artikel
 	err := artikel.db.Find(artikels).Error
 	if err != nil {
-		log.Printf("Cannot find all artikel: %s",err.Error())
+		log.Printf("Cannot find all artikel: %s", err.Error())
 		return []domain.Artikel{}, nil
 	}
 
 	return artikels, nil
 }
 
-func(artikel *artikelRepository) Delete(id uint) error {
+func (artikel *artikelRepository) Delete(id uint) error {
 	var models domain.Artikel
 	err := artikel.db.Where("id = ?", id).Delete(&models).Error
 	if err != nil {

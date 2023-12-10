@@ -24,22 +24,22 @@ func NewArtikelHandler(service portService.ArtikelInterface) portHandler.Artikel
 	}
 }
 
-func(artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req domain.Artikel
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
 	}
-	
+
 	json.Unmarshal(body, &req)
 	data, err := artikel.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create artikel to service, because: %s", err.Error())
 		response := web.WebValidationError{
 			Message: "You cant create artikel",
-			Errors: err,
+			Errors:  err,
 		}
-		
+
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
@@ -49,23 +49,23 @@ func(artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success create artikel",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 
 }
 
-func(artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
+func (artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	getID := mux.Vars(r)
 	parameter := getID["id"]
 	id, _ := strconv.Atoi(parameter)
@@ -74,7 +74,7 @@ func(artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Cannot find artikel by this id to service, because: %s", err.Error())
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: "You cant find role by this id",
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -86,27 +86,27 @@ func(artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success find artikel by this id",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
 
-func(artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
+func (artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
 	data, err := artikel.service.FindAll()
 	if err != nil {
 		log.Printf("Cannot find all artikel to service, because: %s", err.Error())
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: "You cant find all artikel",
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -118,22 +118,22 @@ func(artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Artikel found",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
 
-func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	getID := mux.Vars(r)
 	parameter := getID["id"]
 	id, _ := strconv.Atoi(parameter)
@@ -142,7 +142,7 @@ func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Cannot delete artikel to service, because: %s", err.Error())
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: "You cant delete",
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -150,20 +150,20 @@ func(artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.WriteHeader(http.StatusBadRequest)
-	w.Write(result)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success delete artikel",
-		Data: "Success delete",
+		Data:    "Success delete",
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

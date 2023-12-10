@@ -18,7 +18,7 @@ func NewRoleRepository(db *gorm.DB) portRepo.RoleRepository {
 	}
 }
 
-func(role *roleRepository) Create(req domain.Roles) (*domain.Roles, error) {
+func (role *roleRepository) Create(req domain.Roles) (*domain.Roles, error) {
 	err := role.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cant create role, because: %s", err.Error())
@@ -27,18 +27,18 @@ func(role *roleRepository) Create(req domain.Roles) (*domain.Roles, error) {
 	return &req, nil
 }
 
-func(role *roleRepository) FindByID(id uint) (*domain.Roles, error) {
+func (role *roleRepository) FindByID(id uint) (*domain.Roles, error) {
 	var roles domain.Roles
 	err := role.db.Preload("Users").Where("id = ?", id).Find(&roles).Error
 	if err != nil {
-		log.Printf("Cant find role with this id, because: %s", err.Error())	
+		log.Printf("Cant find role with this id, because: %s", err.Error())
 		return nil, err
 	}
 
 	return &roles, nil
 }
 
-func(role *roleRepository) Update(id uint, req domain.Roles) (*domain.Roles, error) {
+func (role *roleRepository) Update(id uint, req domain.Roles) (*domain.Roles, error) {
 	var roleUpdate domain.Roles
 	err := role.db.Model(&req).Where("id = ?").Updates(&roleUpdate).Error
 

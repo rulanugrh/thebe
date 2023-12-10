@@ -25,13 +25,13 @@ func NewUserHandler(service portService.UserInterface) portHandler.UserInterface
 	}
 }
 
-func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
+func (user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var req domain.User
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
 	}
-	
+
 	json.Unmarshal(body, &req)
 	password := middleware.HashPassword(req.Password)
 	req.Password = password
@@ -41,7 +41,7 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Cannot register to service, because: %s", err.Error())
 		response := web.WebValidationError{
 			Message: "You cant register",
-			Errors: err,
+			Errors:  err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -52,10 +52,10 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success register account",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
@@ -67,86 +67,86 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 
 }
-func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req domain.User
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
 	}
-	
+
 	json.Unmarshal(body, &req)
-	
+
 	data, err := user.service.Login(req.Email)
 	if err != nil {
 		log.Printf("Cannot login to service, because: %s", err.Error())
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: "You cant login",
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-		
+
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
 	}
-	
-	errCompare :=  middleware.CheckPassword(req.Password)
+
+	errCompare := middleware.CheckPassword(req.Password)
 	if errCompare != nil {
 		log.Printf("password not matched")
 	}
-	
+
 	token, errToken := middleware.GenerateToken(req)
 	if errToken != nil {
 		response := web.ResponseFailure{
-			Code: http.StatusUnauthorized,
+			Code:    http.StatusUnauthorized,
 			Message: "You cant login without jwt",
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-		
+
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
 	}
 
 	data.Token = token
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success login account",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
 	if errMarshalling != nil {
 		log.Printf("Cannot marshall response")
 	}
-	
+
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 
 	http.SetCookie(w, &http.Cookie{
-		Name: "session_tokens",
+		Name:  "session_tokens",
 		Value: token,
 	})
 }
 
-func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var req domain.User
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
 	}
-	
+
 	json.Unmarshal(body, &req)
 	data, err := user.service.Update(req.Email, req)
 	if err != nil {
 		log.Printf("Cannot update to service, because: %s", err.Error())
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 			Message: "You cant update",
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -158,22 +158,22 @@ func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success update account",
-		Data: data,
+		Data:    data,
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
 
-func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	getID := mux.Vars(r)
 	parameter := getID["id"]
 	id, _ := strconv.Atoi(parameter)
@@ -183,7 +183,7 @@ func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Cannot delete account to service, because: %s", err.Error())
 		response := web.WebValidationError{
 			Message: "You cant delete",
-			Errors: err,
+			Errors:  err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -194,16 +194,16 @@ func(user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
-	response := web.ResponseSuccess {
-		Code: http.StatusOK,
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
 		Message: "Success delete account",
-		Data: "Success delete",
+		Data:    "Success delete",
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/gorm"
 )
+
 type userRepository struct {
 	db *gorm.DB
 }
@@ -36,13 +37,13 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 	}
 
 	return &req, nil
-	
+
 }
 
 func (user *userRepository) FindByEmail(email string) (*domain.User, error) {
 	var req domain.User
 	err := user.db.Preload("Role").Where("email = ?", email).Find(&req).Error
-	
+
 	if err != nil {
 		log.Printf("Can't login with this email: %s", err.Error())
 		return nil, err
@@ -62,7 +63,7 @@ func (user *userRepository) Update(email string, req domain.User) (*domain.User,
 	return &updateReq, nil
 }
 
-func(user *userRepository) Delete(id uint) error {
+func (user *userRepository) Delete(id uint) error {
 	var req domain.User
 	err := user.db.Where("id = ?", id).Delete(req).Error
 

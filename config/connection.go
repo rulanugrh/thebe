@@ -36,11 +36,12 @@ type Config struct {
 
 	Secret string
 }
+
 var app *Config
 
 func GetConnection() *gorm.DB {
 	conf := GetConfig()
-	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable&TimeZone=Asia/Shanghai", 
+	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable&TimeZone=Asia/Shanghai",
 		conf.Database.User,
 		conf.Database.Pass,
 		conf.Database.Host,

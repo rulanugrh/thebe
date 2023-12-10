@@ -15,7 +15,7 @@ import (
 )
 
 type jwtClaims struct {
-	Name  string
+	Name string
 	jwt.RegisteredClaims
 }
 
@@ -24,7 +24,7 @@ func GenerateToken(user domain.User) (string, error) {
 	time := jwt.NewNumericDate(time.Now().Add(3 * time.Hour))
 	names := fmt.Sprintf("%s %s", user.FName, user.LName)
 	claims := &jwtClaims{
-		Name:  names,
+		Name: names,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: time,
 		},
