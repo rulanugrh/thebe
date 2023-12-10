@@ -12,7 +12,6 @@ type ResponseUser struct {
 	Address   string `json:"address"`
 	Telephone string `json:"telephone"`
 	Role      string `json:"role"`
-	TTL       time.Time `json:"tanggal_lahir"`
 }
 
 type ResponseRole struct {
