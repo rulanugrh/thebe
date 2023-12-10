@@ -25,7 +25,7 @@ type SubmissionTask struct {
 	Name    string `json:"name" form:"name"`
 	EventID uint   `json:"event_id" form:"event_id"`
 	UserID  uint   `json:"user_id" form:"user_id"`
-	Events  Event  `json:"event"`
-	Users   User   `json:"user"`
+	Events  Event  `json:"event" gorm:"foreignKey:EventID;reference:UUID"`
+	Users   User   `json:"user" gorm:"foreignKey:UserID;reference:ID"`
 	Files   string `json:"file" form:"file"`
 }

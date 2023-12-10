@@ -93,6 +93,15 @@ type ListDelegasi struct {
 	Gender string `json:"gender"`
 }
 
+type ResponsePayment struct {
+	SnapURL string `json:"snap_url"`
+	Token   string `json:"token"`
+	Name    string `json:"name"`
+	Event   string `json:"event"`
+	Price   int    `json:"price"`
+	Status  string `json:"status"`
+}
+
 type ValidationList struct {
 	Field string      `json:"field"`
 	Error interface{} `json:"error"`
