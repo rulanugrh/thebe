@@ -39,9 +39,9 @@ func(event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := event.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create event to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant create event",
+			Errors: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

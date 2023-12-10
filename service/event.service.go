@@ -3,22 +3,33 @@ package service
 import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
+	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
 	"log"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type eventService struct {
 	repository portRepo.EventInterface
+	validate *validator.Validate
 }
 
 func NewEventServices(repository portRepo.EventInterface) portService.EventInterface {
 	return &eventService{
 		repository: repository,
+		validate: validator.New(),
 	}
 }
 
 func(event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {	
+	errValidate := middleware.ValidateStruct(event.validate, req)
+	if errValidate != nil {
+		log.Printf("Struct is not valid: %s", errValidate.Error())
+		return nil, errValidate
+	}
+	
 	data, err := event.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create event, because: %s", err.Error())
