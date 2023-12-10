@@ -7,6 +7,6 @@ import (
 
 type PaymentInterface interface {
 	Create(req domain.Payment) (*web.ResponsePayment, error)
-	FindByID(id string) (*web.ResponsePayment, error)
-	FindAll() ([]web.ResponsePayment, error)
+	FindByID(id string) (*web.ResponseForPayment, error)
+	FindAll() ([]web.ResponseForPayment, error)
 }

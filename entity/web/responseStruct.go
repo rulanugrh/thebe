@@ -99,7 +99,13 @@ type ResponsePayment struct {
 	Name    string `json:"name"`
 	Event   string `json:"event"`
 	Price   int    `json:"price"`
-	Status  string `json:"status"`
+}
+
+type ResponseForPayment struct {
+	Name   string `json:"name"`
+	Event  string `json:"event"`
+	Price  int    `json:"price"`
+	Status string `json:"status"`
 }
 
 type ValidationList struct {

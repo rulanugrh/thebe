@@ -34,7 +34,7 @@ func (payment *paymentRepository) Create(req domain.Payment) (*domain.Payment, e
 	return &req, nil
 }
 
-func (payment *paymentRepository) FindByID(id uint) (*domain.Payment, error) {
+func (payment *paymentRepository) FindByID(id string) (*domain.Payment, error) {
 	var models domain.Payment
 	err := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.Users").Where("id = ?", id).Find(&models).Error
 
@@ -56,4 +56,13 @@ func (payment *paymentRepository) FindAll() ([]domain.Payment, error) {
 	}
 
 	return allPayment, nil
+}
+
+func (payment *paymentRepository) Save(req domain.Transaction) error {
+	err := payment.db.Create(req).Error
+	if err != nil {
+		log.Printf("Cannot save transaction into db: %s", err.Error())
+	}
+
+	return nil
 }
