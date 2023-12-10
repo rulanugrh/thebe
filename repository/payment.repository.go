@@ -25,7 +25,7 @@ func (payment *paymentRepository) Create(req domain.Payment) (*domain.Payment, e
 		return nil, err
 	}
 
-	errLookup := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.Users").Find(&req).Error
+	errLookup := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.UserDetail").Find(&req).Error
 	if errLookup != nil {
 		log.Printf("Cannot lookup orders: %s", errLookup.Error())
 		return nil, errLookup
@@ -36,7 +36,7 @@ func (payment *paymentRepository) Create(req domain.Payment) (*domain.Payment, e
 
 func (payment *paymentRepository) FindByID(id string) (*domain.Payment, error) {
 	var models domain.Payment
-	err := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.Users").Where("id = ?", id).Find(&models).Error
+	err := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.UserDetail").Where("id = ?", id).Find(&models).Error
 
 	if err != nil {
 		log.Printf("Cannot find orders by this id: %s", err.Error())
@@ -48,7 +48,7 @@ func (payment *paymentRepository) FindByID(id string) (*domain.Payment, error) {
 
 func (payment *paymentRepository) FindAll() ([]domain.Payment, error) {
 	var allPayment []domain.Payment
-	err := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.Users").Find(&allPayment).Error
+	err := payment.db.Preload("Orders").Preload("Orders.Events").Preload("Orders.UserDetail").Find(&allPayment).Error
 
 	if err != nil {
 		log.Printf("Cannot find orders by this id: %s", err.Error())
