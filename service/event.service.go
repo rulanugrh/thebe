@@ -143,3 +143,18 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 		return &response, nil
 	}
 }
+
+func (event *eventService) SubmissionTask(id uint) (*web.ResponseSubmission, error) {
+	data, err := event.repository.SubmissionTask(id)
+	if err != nil {
+		log.Printf("Cannot submission task, because: %s", err.Error())
+	}
+
+	response := web.ResponseSubmission{
+		Name:     data.Users.FName + " " + data.Users.LName,
+		Event:    data.Events.Name,
+		Filename: data.Files,
+	}
+
+	return &response, nil
+}

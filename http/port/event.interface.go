@@ -6,4 +6,5 @@ type EventInterface interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	FindByID(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
+	SubmissionTask(w http.ResponseWriter, r *http.Request)
 }

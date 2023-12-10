@@ -21,6 +21,7 @@ func NewOrderRepository(db *gorm.DB) portRepo.OrderRepository {
 
 func (order *orderRepository) Create(req domain.Order) (*domain.Order, error) {
 	req.UUID = uuid.New().String()
+	req.Name = "order-" + req.UUID
 
 	err := order.db.Create(&req).Error
 	if err != nil {

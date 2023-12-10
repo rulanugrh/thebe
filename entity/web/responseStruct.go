@@ -2,7 +2,6 @@ package web
 
 import (
 	"html/template"
-	"time"
 )
 
 type ResponseUser struct {
@@ -32,30 +31,29 @@ type ResponseArtikel struct {
 }
 
 type ResponseOrder struct {
-	UUID       string    `json:"uuid"`
-	FName      string    `json:"first_name"`
-	LName      string    `json:"last_name"`
-	Email      string    `json:"email"`
-	Address    string    `json:"address"`
-	Telephone  string    `json:"telephone"`
-	TTL        time.Time `json:"tanggal_lahir"`
-	EventName  string    `json:"event_name"`
-	EventPrice int       `json:"event_price"`
+	UUID       string `json:"uuid"`
+	FName      string `json:"first_name"`
+	LName      string `json:"last_name"`
+	Email      string `json:"email"`
+	Address    string `json:"address"`
+	Telephone  string `json:"telephone"`
+	EventName  string `json:"event_name"`
+	EventPrice int    `json:"event_price"`
 }
 
 type ResponseLogin struct {
-	FName  string    `json:"first_name"`
-	LName  string    `json:"last_name"`
-	Email  string    `json:"email"`
-	Token  string    `json:"token"`
-	Expire time.Time `json:"expire"`
+	FName string `json:"first_name"`
+	LName string `json:"last_name"`
+	Email string `json:"email"`
+	Token string `json:"token"`
 }
 
 type ResponseEvent struct {
-	Name        string            `json:"name" form:"name"`
-	Description string            `json:"description" form:"description"`
-	Price       int               `json:"price" form:"price"`
-	Participant []ListParticipant `json:"participant" form:"participant"`
+	Name        string               `json:"name" form:"name"`
+	Description string               `json:"description" form:"description"`
+	Price       int                  `json:"price" form:"price"`
+	Participant []ListParticipant    `json:"participant" form:"participant"`
+	Submission  []ResponseSubmission `json:"submission" form:"submission"`
 }
 
 type ResponseEventRekarda struct {
@@ -66,6 +64,12 @@ type ResponseEventRekarda struct {
 	Delegasi    []ListDelegasi    `json:"delegasi"`
 }
 
+type ResponseSubmission struct {
+	Name     string `json:"name"`
+	Event    string `json:"event"`
+	Filename string `json:"filename"`
+}
+
 type ResponseOrderRekarda struct {
 	UUID       string         `json:"uuid"`
 	FName      string         `json:"first_name"`
@@ -73,7 +77,6 @@ type ResponseOrderRekarda struct {
 	Email      string         `json:"email"`
 	Address    string         `json:"address"`
 	Telephone  string         `json:"telephone"`
-	TTL        time.Time      `json:"tanggal_lahir"`
 	EventName  string         `json:"event_name"`
 	EventPrice int            `json:"event_price"`
 	Delegasi   []ListDelegasi `json:"delegasi"`

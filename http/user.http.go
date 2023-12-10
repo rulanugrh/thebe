@@ -33,9 +33,6 @@ func (user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.Unmarshal(body, &req)
-	password := middleware.HashPassword(req.Password)
-	req.Password = password
-
 	data, err := user.service.Register(req)
 	if err != nil {
 		log.Printf("Cannot register to service, because: %s", err.Error())
@@ -127,11 +124,6 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
-
-	http.SetCookie(w, &http.Cookie{
-		Name:  "session_tokens",
-		Value: token,
-	})
 }
 
 func (user *userHandler) Update(w http.ResponseWriter, r *http.Request) {

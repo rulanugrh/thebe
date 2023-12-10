@@ -53,3 +53,26 @@ func (event *eventRepository) Update(id uint, req domain.Event) (*domain.Event, 
 
 	return &result, nil
 }
+
+func (event *eventRepository) SubmissionTask(id uint) (*domain.SubmissionTask, error) {
+	var submission domain.SubmissionTask
+	err := event.db.Create(&submission).Error
+	if err != nil {
+		log.Printf("Cannot create submission to db: %s", err.Error())
+		return nil, err
+	}
+
+	errLoad := event.db.Preload("Events").Preload("Users").Find(&submission).Error
+	if errLoad != nil {
+		log.Printf("Cannot preload data, %s", errLoad.Error())
+		return nil, errLoad
+	}
+
+	errAppend := event.db.Model(&submission.Events).Association("Submission").Append(&submission)
+	if errAppend != nil {
+		log.Printf("Cannot append data, %s", errAppend.Error())
+		return nil, errLoad
+	}
+
+	return &submission, nil
+}

@@ -45,6 +45,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/event/", event.Create).Methods("POST")
 	routerGroup.HandleFunc("/event/{id}", event.FindByID).Methods("GET")
 	routerGroup.HandleFunc("/event/{id}", event.Update).Methods("PUT")
+	routerGroup.HandleFunc("/event/{id}/submission", event.SubmissionTask).Methods("POST")
 
 	conf := config.GetConfig()
 	host := fmt.Sprintf("%s:%s", conf.App.Host, conf.App.Port)

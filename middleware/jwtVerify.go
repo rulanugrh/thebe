@@ -65,13 +65,14 @@ func ValidateToken(token string) error {
 func JWTVerify(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var token = r.Header.Get("Authorization")
-		json.NewEncoder(w).Encode(r.Body)
+		json.NewEncoder(w).Encode(r)
 
 		token = strings.TrimSpace(token)
 
 		if token == "" {
 			res := web.ResponseFailure{
 				Message: "Cant login because not have token",
+				Code:    http.StatusUnauthorized,
 			}
 
 			response, _ := json.Marshal(res)
@@ -83,6 +84,7 @@ func JWTVerify(next http.Handler) http.Handler {
 		if err != nil {
 			res := web.ResponseFailure{
 				Message: "Cant login because token is not valid",
+				Code:    http.StatusBadRequest,
 			}
 
 			response, _ := json.Marshal(res)
