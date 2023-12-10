@@ -35,9 +35,9 @@ func(role *roleHandler) Create(w http.ResponseWriter, r *http.Request) {
 	data, err := role.service.Create(req)
 	if err != nil {
 		log.Printf("Cannot create role to service, because: %s", err.Error())
-		response := web.ResponseFailure{
+		response := web.WebValidationError{
 			Message: "You cant create role",
-			Code: http.StatusInternalServerError,
+			Errors: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

@@ -19,7 +19,7 @@ type userService struct {
 func NewUserService(repo portRepo.UserRepository) portService.UserInterface {
 	return &userService{
 		repository: repo,
-		validate: validator.New(),
+		validate: validator.New(validator.WithRequiredStructEnabled()),
 	}
 }
 

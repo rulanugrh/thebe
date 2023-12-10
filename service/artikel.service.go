@@ -19,7 +19,7 @@ type artikelService struct {
 func NewArtikelService(repo portRepo.ArtikelInterface) portService.ArtikelInterface {
 	return &artikelService{
 		repository: repo,
-		validate: validator.New(),
+		validate: validator.New(validator.WithRequiredStructEnabled()),
 	}
 }
 
