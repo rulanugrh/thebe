@@ -15,3 +15,16 @@ last running this command to running app
 ```
 docker-compose up -d app
 ```
+
+## List Service
+| Feature             | Status              | 
+|---------------------|---------------------|
+| Authentication      | :heavy_check_mark:  |
+| Event               | :heavy_check_mark:  |
+| Payment             | Ongoing             |
+| User                | :heavy_check_mark:  |
+| Dockerize           | :heavy_check_mark:  |
+| Frontend            | Ongoing             |
+| Order               | Ongoing             |
+| Monitoring          | Ongoing             |
+| File Handler        | Ongoing             |
