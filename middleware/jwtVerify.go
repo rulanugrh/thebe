@@ -65,7 +65,7 @@ func ValidateToken(token string) error {
 func JWTVerify(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var token = r.Header.Get("Authorization")
-		json.NewEncoder(w).Encode(r)
+		json.NewEncoder(w).Encode(r.Body)
 
 		token = strings.TrimSpace(token)
 

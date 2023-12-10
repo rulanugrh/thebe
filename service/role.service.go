@@ -19,7 +19,7 @@ type roleService struct {
 func NewRoleService(repo portRepo.RoleRepository) portService.RoleInterface {
 	return &roleService{
 		repository: repo,
-		validate: validator.New(validator.WithRequiredStructEnabled()),
+		validate: validator.New(),
 	}
 }
 

@@ -19,7 +19,7 @@ type eventService struct {
 func NewEventServices(repository portRepo.EventInterface) portService.EventInterface {
 	return &eventService{
 		repository: repository,
-		validate: validator.New(validator.WithRequiredStructEnabled()),
+		validate: validator.New(),
 	}
 }
 

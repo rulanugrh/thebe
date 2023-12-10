@@ -19,7 +19,7 @@ type orderService struct {
 func NewOrderService(repo portRepo.OrderRepository) portService.OrderInterface {
 	return &orderService{
 		repository: repo,
-		validate: validator.New(validator.WithRequiredStructEnabled()),
+		validate: validator.New(),
 	}
 }
 

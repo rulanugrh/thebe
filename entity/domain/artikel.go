@@ -8,6 +8,6 @@ import (
 
 type Artikel struct {
 	gorm.Model
-	Title string `json:"title" validate:"required"`
-	Content template.HTML `json:"content" validate:"required"`
+	Title string `json:"title" `
+	Content template.HTML `json:"content" `
 }
