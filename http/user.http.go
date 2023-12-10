@@ -4,6 +4,7 @@ import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
+	"be-project/middleware"
 	portService "be-project/service/port"
 	"encoding/json"
 	"io/ioutil"
@@ -32,6 +33,9 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	json.Unmarshal(body, &req)
+	password := middleware.HashPassword(req.Password)
+	req.Password = password
+
 	data, err := user.service.Register(req)
 	if err != nil {
 		log.Printf("Cannot register to service, because: %s", err.Error())
@@ -87,6 +91,24 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
+	compare := []byte(req.Password)
+	if err = middleware.CheckPassword(req.Password, compare); err != nil {
+		response := web.ResponseFailure{
+			Code: http.StatusBadRequest,
+			Message: "Password not matched",
+		}
+
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
+	}
+
+	token, expireToken := middleware.GenerateSession(req)
+
 	response := web.ResponseSuccess {
 		Code: http.StatusOK,
 		Message: "Success login account",
@@ -94,10 +116,17 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
+
+	http.SetCookie(w, &http.Cookie{
+		Name: "session_tokens",
+		Value: token,
+		Expires: expireToken,
+	})
+	
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }

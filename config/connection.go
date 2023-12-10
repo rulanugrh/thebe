@@ -33,6 +33,8 @@ type Config struct {
 		Client string
 		Server string
 	}
+
+	Secret string
 }
 var app *Config
 
@@ -85,6 +87,7 @@ func initConfig() *Config {
 		conf.Sandbox.Server = ""
 		conf.Production.Client = ""
 		conf.Production.Server = ""
+		conf.Secret = ""
 
 		return &conf
 	}
@@ -100,6 +103,7 @@ func initConfig() *Config {
 	conf.Sandbox.Server = os.Getenv("SANDBOX_SERVER")
 	conf.Production.Client = os.Getenv("PRODUCTION_CLIENT")
 	conf.Production.Client = os.Getenv("PRODUCTION_SERVER")
+	conf.Secret = os.Getenv("APP_SECRET")
 
 	return &conf
 

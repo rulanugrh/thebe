@@ -19,6 +19,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.CommonMiddleware)
+	routerGroup.Use(middleware.SessionVerify)
 
 	// routing for user
 	routerGroup.HandleFunc("/user/", user.Update).Methods("PUT")
