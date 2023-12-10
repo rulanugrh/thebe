@@ -47,8 +47,10 @@ func ReadFormFile(Path string, w http.ResponseWriter, r http.Request) string {
 			log.Printf("Cannot create folder: %s", errCreate.Error())
 		}
 
-		fileName := fmt.Sprintf("%s/%d-%s", Path, time.Now().Hour(), fileHeader.Filename)
-		out, errs := os.Create(fileName)
+		fileName := fmt.Sprintf("%d-%s", time.Now().Hour(), fileHeader.Filename)
+		folders := fmt.Sprintf("%s/%s", Path, fileName)
+
+		out, errs := os.Create(folders)
 		if errs != nil {
 			log.Printf("Cannot create because file to big, %s", err.Error())
 		}
