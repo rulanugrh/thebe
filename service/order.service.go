@@ -58,7 +58,6 @@ func(order *orderService) Create(req domain.Order) (interface{}, error) {
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 			Delegasi: listDelegasi,
 		}
 
@@ -74,7 +73,6 @@ func(order *orderService) Create(req domain.Order) (interface{}, error) {
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 		}
 	
 		return &resultData, nil
@@ -110,7 +108,6 @@ func(order *orderService) Update(uuid string, req domain.Order) (interface{}, er
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 			Delegasi: listDelegasi,
 		}
 
@@ -126,7 +123,6 @@ func(order *orderService) Update(uuid string, req domain.Order) (interface{}, er
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 		}
 	
 		return &resultData, nil
@@ -162,7 +158,6 @@ func(order *orderService) FindByUserID(userid uint) (interface{}, error) {
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 			Delegasi: listDelegasi,
 		}
 
@@ -178,7 +173,6 @@ func(order *orderService) FindByUserID(userid uint) (interface{}, error) {
 			Telephone: data.UserDetail.Telephone,
 			EventName: data.Events.Name,
 			EventPrice: data.Events.Price,
-			TTL: data.UserDetail.TTL,
 		}
 	
 		return &resultData, nil

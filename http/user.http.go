@@ -39,17 +39,17 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	data, err := user.service.Register(req)
 	if err != nil {
 		log.Printf("Cannot register to service, because: %s", err.Error())
-		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
+		response := web.WebValidationError{
 			Message: "You cant register",
+			Errors: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
 
-	w.Write(result)
-	w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
 	}
 
 	response := web.ResponseSuccess {
@@ -59,9 +59,9 @@ func(user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
@@ -75,6 +75,7 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	json.Unmarshal(body, &req)
+	
 	data, err := user.service.Login(req.Email)
 	if err != nil {
 		log.Printf("Cannot login to service, because: %s", err.Error())
@@ -86,28 +87,32 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
+		
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
 	}
-
-	compare := []byte(req.Password)
-	if err = middleware.CheckPassword(req.Password, compare); err != nil {
+	
+	errCompare :=  middleware.CheckPassword(req.Password)
+	if errCompare != nil {
+		log.Printf("password not matched")
+	}
+	
+	token, errToken := middleware.GenerateToken(req)
+	if errToken != nil {
 		response := web.ResponseFailure{
-			Code: http.StatusBadRequest,
-			Message: "Password not matched",
+			Code: http.StatusUnauthorized,
+			Message: "You cant login without jwt",
 		}
-
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
+		
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
 	}
 
-	token, expireToken := middleware.GenerateSession(req)
+	data.Token = token
 
 	response := web.ResponseSuccess {
 		Code: http.StatusOK,
@@ -119,16 +124,14 @@ func(user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if errMarshalling != nil {
 		log.Printf("Cannot marshall response")
 	}
-
+	
+	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 
 	http.SetCookie(w, &http.Cookie{
 		Name: "session_tokens",
 		Value: token,
-		Expires: expireToken,
 	})
-	
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func(user *userHandler) Update(w http.ResponseWriter, r *http.Request) {

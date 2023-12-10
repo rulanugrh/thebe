@@ -41,7 +41,7 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 
 func (user *userRepository) FindByEmail(email string) (*domain.User, error) {
 	var req domain.User
-	err := user.db.Preload("Role").Where("email = ?", email).Find(req).Error
+	err := user.db.Preload("Role").Where("email = ?", email).Find(&req).Error
 	
 	if err != nil {
 		log.Printf("Can't login with this email: %s", err.Error())

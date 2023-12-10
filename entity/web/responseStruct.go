@@ -49,6 +49,7 @@ type ResponseLogin struct {
 	LName     string `json:"last_name"`
 	Email     string `json:"email"`
 	Token 	  string `json:"token"`
+	Expire time.Time `json:"expire"`
 }
 
 type ResponseEvent struct {

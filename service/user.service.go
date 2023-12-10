@@ -42,7 +42,6 @@ func(user *userService) Register(req domain.User) (*web.ResponseUser, error) {
 		Email: data.Email,
 		Address: data.Address,
 		Telephone: data.Telephone,
-		TTL: data.TTL,
 		Role: data.Role.Name,
 	}
 
@@ -76,7 +75,6 @@ func(user *userService) Update(email string, req domain.User) (*web.ResponseUser
 		Email: data.Email,
 		Address: data.Address,
 		Telephone: data.Telephone,
-		TTL: data.TTL,
 		Role: data.Role.Name,
 	}
 

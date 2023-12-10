@@ -14,12 +14,13 @@ import (
 func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface, event portHandler.EventInterface) {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(CommonMiddleware)
-	router.HandleFunc("/register/", user.Register).Methods("POST")
-	router.HandleFunc("/login/", user.Login).Methods("POST")
+	router.HandleFunc("/user/register/", user.Register).Methods("POST")
+	router.HandleFunc("/user/login/", user.Login).Methods("POST")
+	router.HandleFunc("/role/", role.Create).Methods("POST")
 
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.CommonMiddleware)
-	routerGroup.Use(middleware.SessionVerify)
+	routerGroup.Use(middleware.JWTVerify)
 
 	// routing for user
 	routerGroup.HandleFunc("/user/", user.Update).Methods("PUT")
@@ -31,7 +32,6 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/order/{id}", order.Update).Methods("PUT")
 
 	// routing for role
-	routerGroup.HandleFunc("/role/", role.Create).Methods("POST")
 	routerGroup.HandleFunc("/role/{id}", role.FindByID).Methods("GET")
 	routerGroup.HandleFunc("/role/{id}", role.Update).Methods("PUT")
 

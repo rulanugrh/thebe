@@ -38,7 +38,7 @@ func(role *roleService) Create(req domain.Roles) (*web.ResponseCreateRole, error
 
 	resultData := web.ResponseCreateRole{
 		Name: data.Name,
-		Description: data.Descript,
+		Description: data.Description,
 	}
 
 	return &resultData, nil
@@ -59,7 +59,6 @@ func(role *roleService) FindByID(id uint) (*web.ResponseRole, error) {
 			Email: user.Email,
 			Address: user.Address,
 			Telephone: user.Telephone,
-			TTL: user.TTL,
 		}
 
 		users = append(users, oneUser)
@@ -67,7 +66,7 @@ func(role *roleService) FindByID(id uint) (*web.ResponseRole, error) {
 
 	resultData := web.ResponseRole{
 		Name: data.Name,
-		Description: data.Descript,
+		Description: data.Description,
 		User: users,
 	}
 
@@ -89,7 +88,6 @@ func(role *roleService) Update(id uint, req domain.Roles) (*web.ResponseRole, er
 			Email: user.Email,
 			Address: user.Address,
 			Telephone: user.Telephone,
-			TTL: user.TTL,
 		}
 
 		users = append(users, oneUser)
@@ -97,7 +95,7 @@ func(role *roleService) Update(id uint, req domain.Roles) (*web.ResponseRole, er
 
 	resultData := web.ResponseRole{
 		Name: data.Name,
-		Description: data.Descript,
+		Description: data.Description,
 		User: users,
 	}
 
