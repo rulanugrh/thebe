@@ -126,7 +126,7 @@ docker-compose up -d app
 - Header :
     - Authorization: Token JWT
 
-### Create Event
+#### Create Event
 - Method : POST
 - Endpoint : `/api/event/`
 - Header :
@@ -172,7 +172,7 @@ docker-compose up -d app
     }
 }
 ```
-### Update Event
+#### Update Event
 - Method : PUT
 - Endpoint : `/api/event/{id}`
 - Header :
