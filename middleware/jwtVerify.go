@@ -21,7 +21,7 @@ type jwtClaims struct {
 
 func GenerateToken(user domain.User) (string, error) {
 	conf := config.GetConfig()
-	time := jwt.NewNumericDate(time.Now().Add(3 * time.Hour))
+	time := jwt.NewNumericDate(time.Now().Add(1 * time.Hour))
 	names := fmt.Sprintf("%s %s", user.FName, user.LName)
 	claims := &jwtClaims{
 		Name: names,

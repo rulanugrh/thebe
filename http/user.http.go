@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -121,6 +122,12 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if errMarshalling != nil {
 		log.Printf("Cannot marshall response")
 	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "Set-Token",
+		Value:   token,
+		Expires: time.Now().Add(1 * time.Hour),
+	})
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

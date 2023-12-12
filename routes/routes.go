@@ -16,7 +16,6 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	router.Use(middleware.CommonMiddleware)
 	router.HandleFunc("/user/register/", user.Register).Methods("POST")
 	router.HandleFunc("/user/login/", user.Login).Methods("POST")
-	router.HandleFunc("/role/", role.Create).Methods("POST")
 
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.CommonMiddleware)

@@ -19,6 +19,8 @@ func NewUserRepository(db *gorm.DB) portRepo.UserRepository {
 }
 
 func (user *userRepository) Register(req domain.User) (*domain.User, error) {
+	req.RoleID = 2
+
 	err := user.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Can't create user, because: %s", err.Error())

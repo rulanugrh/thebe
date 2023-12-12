@@ -63,6 +63,30 @@ func RunMigration() *gorm.DB {
 	getDB := GetConnection()
 	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
 
+	adminRole := domain.Roles{
+		Name:        "administrator",
+		Description: "ini adalah role admin",
+	}
+
+	pesertaRole := domain.Roles{
+		Name:        "peserta",
+		Description: "ini adalah role peserta",
+	}
+
+	adminUser := domain.User{
+		FName:     "Admin",
+		LName:     "IAI",
+		Telephone: "_",
+		Address:   "-",
+		Email:     "admin@admin.co.id",
+		Password:  "admin123!!",
+		RoleID:    2,
+	}
+
+	getDB.Create(&adminRole)
+	getDB.Create(&pesertaRole)
+	getDB.Create(&adminUser)
+
 	return getDB
 }
 
