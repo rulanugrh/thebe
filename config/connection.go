@@ -35,6 +35,11 @@ type Config struct {
 	}
 
 	Secret string
+
+	Admin struct {
+		Password string
+		Email    string
+	}
 }
 
 var app *Config
@@ -60,6 +65,8 @@ func GetConnection() *gorm.DB {
 }
 
 func RunMigration() *gorm.DB {
+	config := GetConfig()
+
 	getDB := GetConnection()
 	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
 
@@ -78,8 +85,8 @@ func RunMigration() *gorm.DB {
 		LName:     "IAI",
 		Telephone: "_",
 		Address:   "-",
-		Email:     "admin@admin.co.id",
-		Password:  "admin123!!",
+		Email:     config.Admin.Email,
+		Password:  config.Admin.Password,
 		RoleID:    2,
 	}
 
@@ -129,6 +136,8 @@ func initConfig() *Config {
 	conf.Production.Client = os.Getenv("PRODUCTION_CLIENT")
 	conf.Production.Client = os.Getenv("PRODUCTION_SERVER")
 	conf.Secret = os.Getenv("APP_SECRET")
+	conf.Admin.Password = os.Getenv("ADMIN_PASSWORD")
+	conf.Admin.Email = os.Getenv("ADMIN_EMAIL")
 
 	return &conf
 
