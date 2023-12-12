@@ -79,6 +79,7 @@ func (event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant find event with this user id",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -120,9 +121,10 @@ func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 	data, err := event.service.Update(uint(id), req)
 	if err != nil {
 		log.Printf("Cannot update event to service, because: %s", err.Error())
-		response := web.WebValidationError{
+		response := web.ResponseFailure{
 			Message: "You cant update event",
-			Errors:  err,
+			Error:  err,
+			Code: 400,
 		}
 
 		result, errMarshalling := json.Marshal(response)
@@ -167,6 +169,7 @@ func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant create submission task",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

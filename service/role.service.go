@@ -53,7 +53,11 @@ func (role *roleService) FindByID(id uint) (*web.ResponseRole, error) {
 	data, err := role.repository.FindByID(id)
 	if err != nil {
 		log.Printf("Cant find this role to repo roles: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant find by this id, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var users []web.ResponseUser
@@ -82,7 +86,11 @@ func (role *roleService) Update(id uint, req domain.Roles) (*web.ResponseRole, e
 	data, err := role.repository.Update(id, req)
 	if err != nil {
 		log.Printf("Cant update this role to repo roles: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant update, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var users []web.ResponseUser

@@ -6,6 +6,7 @@ import (
 	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -33,7 +34,11 @@ func (event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) 
 	data, err := event.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create event, because: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant create, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	response := web.ResponseEvent{
@@ -49,7 +54,11 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	data, err := event.repository.FindByID(id)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant find with this id, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var listParticipant []web.ListParticipant
@@ -99,7 +108,11 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 	data, err := event.repository.Update(id, req)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant update, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var listParticipant []web.ListParticipant
@@ -148,6 +161,11 @@ func (event *eventService) SubmissionTask(id uint) (*web.ResponseSubmission, err
 	data, err := event.repository.SubmissionTask(id)
 	if err != nil {
 		log.Printf("Cannot submission task, because: %s", err.Error())
+		errors := fmt.Sprintf("cant upload task, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	response := web.ResponseSubmission{

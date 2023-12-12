@@ -6,6 +6,7 @@ import (
 	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -33,7 +34,11 @@ func (order *orderService) Create(req domain.Order) (interface{}, error) {
 	data, err := order.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant req order to repo, because: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant create order, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var listDelegasi []web.ListDelegasi
@@ -82,7 +87,11 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	data, err := order.repository.Update(uuid, req)
 	if err != nil {
 		log.Printf("Cant req update to repo, because: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant update, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	var listDelegasi []web.ListDelegasi

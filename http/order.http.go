@@ -74,6 +74,7 @@ func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) 
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant find order with this user id",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -117,6 +118,7 @@ func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant update order",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

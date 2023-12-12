@@ -148,6 +148,7 @@ func (user *userHandler) Update(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant update",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -181,9 +182,10 @@ func (user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	err := user.service.Delete(uint(id))
 	if err != nil {
 		log.Printf("Cannot delete account to service, because: %s", err.Error())
-		response := web.WebValidationError{
+		response := web.ResponseFailure{
 			Message: "You cant delete",
-			Errors:  err,
+			Error:  err,
+			Code: 400,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {

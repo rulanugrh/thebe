@@ -75,6 +75,7 @@ func (role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant find role by this id",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
@@ -119,6 +120,7 @@ func (role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "You cant update roles",
+			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
