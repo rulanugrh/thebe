@@ -6,6 +6,7 @@ import (
 	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -36,7 +37,11 @@ func (user *userService) Register(req domain.User) (*web.ResponseUser, error) {
 	data, err := user.repository.Register(req)
 	if err != nil {
 		log.Printf("Cant register to repo user: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant register, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	resultData := web.ResponseUser{
@@ -59,7 +64,10 @@ func (user *userService) Login(req domain.UserLogin) (*web.ResponseLogin, error)
 	data, err := user.repository.FindByEmail(req)
 	if err != nil {
 		log.Printf("Cant find email to repo user: %s", err.Error())
-		return nil, err
+		return nil, web.Error{
+			Message: "email is not valid",
+			Code: 401,
+		}
 	} 
 
 	matchedPassword := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
@@ -80,7 +88,11 @@ func (user *userService) Update(email string, req domain.User) (*web.ResponseUse
 	data, err := user.repository.Update(email, req)
 	if err != nil {
 		log.Printf("Cant update user to repo user: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant update, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 	resultData := web.ResponseUser{
 		FName:     data.FName,

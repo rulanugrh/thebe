@@ -125,6 +125,8 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			Name:    "Set-Token",
 			Value:   token,
 			Expires: time.Now().Add(1 * time.Hour),
+			HttpOnly: true,
+			Secure: false,
 		})
 
 		w.WriteHeader(http.StatusOK)

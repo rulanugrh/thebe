@@ -6,6 +6,7 @@ import (
 	"be-project/middleware"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -33,7 +34,11 @@ func (role *roleService) Create(req domain.Roles) (*web.ResponseCreateRole, erro
 	data, err := role.repository.Create(req)
 	if err != nil {
 		log.Printf("Cant create role to repo role: %s", err.Error())
-		return nil, err
+		errors := fmt.Sprintf("cant create roles, because: %s", err.Error())
+		return nil, web.Error{
+			Message: errors,
+			Code: 400,
+		}
 	}
 
 	resultData := web.ResponseCreateRole{

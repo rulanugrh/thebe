@@ -23,6 +23,7 @@ type Config struct {
 	App struct {
 		Host string
 		Port string
+		AllowOrigin string
 	}
 
 	Sandbox struct {
@@ -150,6 +151,8 @@ func initConfig() *Config {
 
 	conf.App.Host = os.Getenv("APP_HOST")
 	conf.App.Port = os.Getenv("APP_PORT")
+	conf.App.AllowOrigin = os.Getenv("APP_ORIGIN")
+
 	conf.Database.Host = os.Getenv("DATABASE_HOST")
 	conf.Database.Port = os.Getenv("DATABASE_PORT")
 	conf.Database.Name = os.Getenv("DATABASE_NAME")
