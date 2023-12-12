@@ -9,6 +9,7 @@ import (
 	"log"
 
 	"github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userService struct {
@@ -49,16 +50,26 @@ func (user *userService) Register(req domain.User) (*web.ResponseUser, error) {
 
 	return &resultData, nil
 }
-func (user *userService) Login(email string) (*web.ResponseLogin, error) {
-	data, err := user.repository.FindByEmail(email)
+func (user *userService) Login(req domain.UserLogin) (*web.ResponseLogin, error) {
+	errValidate := middleware.ValidateStruct(user.validate, req)
+	if errValidate != nil {
+		log.Printf("Struct is not valid: %s", errValidate.Error())
+		return nil, errValidate
+	}
+	data, err := user.repository.FindByEmail(req)
 	if err != nil {
 		log.Printf("Cant find email to repo user: %s", err.Error())
 		return nil, err
-	}
+	} 
 
+	matchedPassword := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
+	if matchedPassword != nil {
+		return &web.ResponseLogin{}, web.Error{
+			Message: "password not matched",
+			Code: 401,
+		}
+	}
 	resultData := web.ResponseLogin{
-		FName: data.FName,
-		LName: data.LName,
 		Email: data.Email,
 	}
 

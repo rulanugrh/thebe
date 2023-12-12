@@ -46,21 +46,21 @@ func (order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success create order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success create order",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
@@ -82,21 +82,21 @@ func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) 
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success find order",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -125,19 +125,19 @@ func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 		w.Write(result)
 		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success update order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success update order",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }

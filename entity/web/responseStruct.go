@@ -42,10 +42,7 @@ type ResponseOrder struct {
 }
 
 type ResponseLogin struct {
-	FName string `json:"first_name"`
-	LName string `json:"last_name"`
 	Email string `json:"email"`
-	Token string `json:"token"`
 }
 
 type ResponseEvent struct {
@@ -107,6 +104,10 @@ type ResponseForPayment struct {
 	Price  int    `json:"price"`
 	Status string `json:"status"`
 }
+type Error struct {
+	Message string
+	Code int
+}
 
 type ValidationList struct {
 	Field string      `json:"field"`
@@ -126,3 +127,8 @@ type WebValidationError struct {
 	Message string      `json:"message"`
 	Errors  interface{} `json:"error"`
 }
+
+func (err Error) Error() string {
+	return err.Message
+}
+

@@ -46,21 +46,22 @@ func (role *roleHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
-	}
+	} else {
+		
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success create role",
+			Data:    data,
+		}
 
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success create role",
-		Data:    data,
-	}
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
 
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
@@ -82,21 +83,21 @@ func (role *roleHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find role by this id",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success find role by this id",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -126,19 +127,19 @@ func (role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success update roles",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success update roles",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }

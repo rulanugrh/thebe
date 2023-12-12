@@ -5,7 +5,6 @@ import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -19,12 +18,11 @@ type jwtClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user domain.User) (string, error) {
+func GenerateToken(user domain.UserLogin) (string, error) {
 	conf := config.GetConfig()
 	time := jwt.NewNumericDate(time.Now().Add(1 * time.Hour))
-	names := fmt.Sprintf("%s %s", user.FName, user.LName)
 	claims := &jwtClaims{
-		Name: names,
+		Name: user.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: time,
 		},

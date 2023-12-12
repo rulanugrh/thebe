@@ -51,21 +51,21 @@ func (event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
 		return
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success create event",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success create event",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
@@ -87,21 +87,21 @@ func (event *eventHandler) FindByID(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find event",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success find event",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -132,21 +132,21 @@ func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success update event",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success update event",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request) {
@@ -175,19 +175,19 @@ func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success submission task",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success submission task",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }

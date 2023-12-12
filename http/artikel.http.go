@@ -47,21 +47,21 @@ func (artikel *artikelHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success create artikel",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success create artikel",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 
 }
 
@@ -84,21 +84,21 @@ func (artikel *artikelHandler) FindByID(w http.ResponseWriter, r *http.Request) 
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find artikel by this id",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success find artikel by this id",
-		Data:    data,
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
@@ -116,21 +116,22 @@ func (artikel *artikelHandler) FindAll(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
-	}
+	} else {
+		
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Artikel found",
+			Data:    data,
+		}
 
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Artikel found",
-		Data:    data,
-	}
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
 
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
 
 func (artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
@@ -152,19 +153,19 @@ func (artikel *artikelHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success delete artikel",
+			Data:    "Success delete",
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "Success delete artikel",
-		Data:    "Success delete",
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }

@@ -42,16 +42,17 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 
 }
 
-func (user *userRepository) FindByEmail(email string) (*domain.User, error) {
-	var req domain.User
-	err := user.db.Preload("Role").Where("email = ?", email).Find(&req).Error
+func (user *userRepository) FindByEmail(req domain.UserLogin) (*domain.User, error) {
+	var userDomain domain.User
 
+	err := user.db.Preload("Role").Where("email = ?", req.Email).First(&userDomain).Error
+	
 	if err != nil {
-		log.Printf("Can't login with this email: %s", err.Error())
+		log.Printf("Can't login with this email or invalid password: %s", err.Error())
 		return nil, err
 	}
 
-	return &req, nil
+	return &userDomain, nil
 }
 
 func (user *userRepository) Update(email string, req domain.User) (*domain.User, error) {

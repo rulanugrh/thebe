@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -43,6 +44,7 @@ type Config struct {
 }
 
 var app *Config
+var DB *gorm.DB
 
 func GetConnection() *gorm.DB {
 	conf := GetConfig()
@@ -60,6 +62,7 @@ func GetConnection() *gorm.DB {
 		return nil
 	}
 
+	DB = db
 	log.Print("Success connect to database")
 	return db
 }
@@ -83,13 +86,19 @@ func RunMigration() *gorm.DB {
 		Description: "ini adalah role peserta",
 	}
 
+	bytes, err := bcrypt.GenerateFromPassword([]byte(config.Admin.Password), 14)
+	if err != nil {
+		log.Printf("Cant generate hash password: %v", err)
+	}
+
+
 	adminUser := domain.User{
 		FName:     "Admin",
 		LName:     "IAI",
 		Telephone: "_",
 		Address:   "-",
 		Email:     config.Admin.Email,
-		Password:  config.Admin.Password,
+		Password:  string(bytes),
 		RoleID:    1,
 	}
 

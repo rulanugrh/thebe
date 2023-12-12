@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Payment struct {
 	gorm.Model
-	OrderID string `json:"order_id"`
+	OrderID string `json:"order_id" validate:"required"`
 	Orders  Order  `json:"order" gorm:"foreignKey:OrderID;reference:UUID"`
 }
 
