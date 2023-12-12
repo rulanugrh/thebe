@@ -87,7 +87,7 @@ func RunMigration() *gorm.DB {
 		Address:   "-",
 		Email:     config.Admin.Email,
 		Password:  config.Admin.Password,
-		RoleID:    2,
+		RoleID:    1,
 	}
 
 	getDB.Create(&adminRole)
