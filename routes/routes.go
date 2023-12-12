@@ -18,9 +18,10 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(middleware.CommonMiddleware)
 	corsHandling := cors.New(cors.Options{
-		AllowedOrigins: []string{conf.App.AllowOrigin},
+		AllowedOrigins: []string{"http://localhost:3000"},
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		AllowedHeaders: []string{"Content-Length", "Content-Type", "Authorization"},
+		AllowCredentials: true,
 	})
 
 	router.HandleFunc("/user/register/", user.Register).Methods("POST")
