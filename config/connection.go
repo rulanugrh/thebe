@@ -68,7 +68,10 @@ func RunMigration() *gorm.DB {
 	config := GetConfig()
 
 	getDB := GetConnection()
-	getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
+	errs := getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
+	if errs != nil {
+		log.Printf("Cannot migration, because: %s", errs.Error())
+	}
 
 	adminRole := domain.Roles{
 		Name:        "administrator",
@@ -90,10 +93,22 @@ func RunMigration() *gorm.DB {
 		RoleID:    1,
 	}
 
-	getDB.Create(&adminRole)
-	getDB.Create(&pesertaRole)
-	getDB.Create(&adminUser)
+	errAdminRole := getDB.Create(&adminRole).Error
+	if errAdminRole != nil {
+		log.Printf("Cannot create role admin: %s", errAdminRole.Error())
+	}
 
+	errpesertaRoles := getDB.Create(&pesertaRole).Error
+	if errpesertaRoles != nil {
+		log.Printf("Cannot create role peserta: %s", errpesertaRoles.Error())
+	}
+
+	errAdmin := getDB.Create(&adminUser).Error
+	if errAdmin != nil {
+		log.Printf("Cnnot create administrator: %s", errAdmin.Error())
+	}
+
+	log.Println("Success migration and create roles & administrator")
 	return getDB
 }
 
