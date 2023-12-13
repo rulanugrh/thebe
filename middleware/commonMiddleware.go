@@ -17,3 +17,4 @@ func CommonMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
