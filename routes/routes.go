@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 )
 
 func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role portHandler.RoleInterface, artikel portHandler.ArtikelInterface, event portHandler.EventInterface) {
@@ -17,12 +16,12 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(middleware.CommonMiddleware)
-	corsHandling := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000/"},
-		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
-		AllowedHeaders: []string{"Content-Length", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	})
+	// corsHandling := cors.New(cors.Options{
+	// 	AllowedOrigins: []string{"http://localhost:3000/"},
+	// 	AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	// 	AllowedHeaders: []string{"Content-Length", "Content-Type", "Authorization"},
+	// 	AllowCredentials: true,
+	// })
 
 	router.HandleFunc("/user/register/", user.Register).Methods("POST")
 	router.HandleFunc("/user/login/", user.Login).Methods("POST")
@@ -57,9 +56,13 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/event/{id}/submission", event.SubmissionTask).Methods("POST")
 	
 	host := fmt.Sprintf("%s:%s", conf.App.Host, conf.App.Port)
-	handlersCORS := corsHandling.Handler(router)
+	// handlersCORS := corsHandling.Handler(router)
 
-	err := http.ListenAndServe(host, handlersCORS)
+	server := http.Server{
+		Addr: host,
+		Handler: router,
+	}
+	err := server.ListenAndServe()
 	if err != nil {
 		log.Printf("Cannot running, because: %s", err.Error())
 	}
