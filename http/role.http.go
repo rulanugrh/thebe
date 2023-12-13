@@ -157,33 +157,52 @@ func (role *roleHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.Unmarshal(body, &req)
-	data, err := role.service.Update(uint(id), req)
-	if err != nil {
-		log.Printf("Cannot update role to service, because: %s", err.Error())
+	errCheck := middleware.ValidateTokenAdmin(r)
+	if errCheck != nil {
+		log.Printf("You cant see this, just admin, %s", errCheck.Error())
 		response := web.ResponseFailure{
-			Code:    http.StatusBadRequest,
-			Message: "You cant update roles",
-			Error: err,
+			Code:    http.StatusForbidden,
+			Message: "You cant find role by this id",
+			Error: errCheck,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-		w.WriteHeader(http.StatusBadRequest)
+		
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
 		w.Write(result)
 	} else {
-		response := web.ResponseSuccess{
-			Code:    http.StatusOK,
-			Message: "Success update roles",
-			Data:    data,
+		data, err := role.service.Update(uint(id), req)
+		if err != nil {
+			log.Printf("Cannot update role to service, because: %s", err.Error())
+			response := web.ResponseFailure{
+				Code:    http.StatusBadRequest,
+				Message: "You cant update roles",
+				Error: err,
+			}
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(result)
+		} else {
+			response := web.ResponseSuccess{
+				Code:    http.StatusOK,
+				Message: "Success update roles",
+				Data:    data,
+			}
+		
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+		
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-	
-		result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
-	
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
+
 	}
 }
