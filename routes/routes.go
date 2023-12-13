@@ -22,6 +22,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.JWTVerify)
+	routerGroup.Use(middleware.CommonMiddleware)
 	
 	routerGroup.HandleFunc("/user/", user.Update).Methods("PUT")
 	routerGroup.HandleFunc("/user/{id}", user.Delete).Methods("DELETE")
