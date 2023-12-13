@@ -15,12 +15,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	conf := config.GetConfig()
 	
 	router := mux.NewRouter().StrictSlash(true)
-	// corsHandling := cors.New(cors.Options{
-	// 	AllowedOrigins: []string{conf.App.AllowOrigin},
-	// 	AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
-	// 	AllowedHeaders: []string{"Content-Length", "Content-Type", "Authorization"},
-	// 	AllowCredentials: true,
-	// })
+	router.Use(middleware.CommonMiddleware)
 
 	router.HandleFunc("/user/register/", user.Register).Methods("POST")
 	router.HandleFunc("/user/login/", user.Login).Methods("POST")
@@ -51,7 +46,6 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	
 	
 	host := fmt.Sprintf("%s:%s", conf.App.Host, conf.App.Port)
-	// handlersCORS := corsHandling.Handler(router)
 	server := http.Server{
 		Addr: host,
 		Handler: router,
