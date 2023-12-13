@@ -8,6 +8,7 @@ import (
 	portService "be-project/service/port"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -15,12 +16,14 @@ import (
 type roleService struct {
 	repository portRepo.RoleRepository
 	validate   *validator.Validate
+	r *http.Request
 }
 
 func NewRoleService(repo portRepo.RoleRepository) portService.RoleInterface {
 	return &roleService{
 		repository: repo,
 		validate:   validator.New(),
+		r: &http.Request{},
 	}
 }
 
@@ -50,6 +53,7 @@ func (role *roleService) Create(req domain.Roles) (*web.ResponseCreateRole, erro
 }
 
 func (role *roleService) FindByID(id uint) (*web.ResponseRole, error) {
+	
 	data, err := role.repository.FindByID(id)
 	if err != nil {
 		log.Printf("Cant find this role to repo roles: %s", err.Error())

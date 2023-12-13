@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -69,7 +68,7 @@ func GetConnection() *gorm.DB {
 }
 
 func RunMigration() *gorm.DB {
-	config := GetConfig()
+	// config := GetConfig()
 
 	getDB := GetConnection()
 	errs := getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
@@ -77,46 +76,46 @@ func RunMigration() *gorm.DB {
 		log.Printf("Cannot migration, because: %s", errs.Error())
 	}
 
-	adminRole := domain.Roles{
-		Name:        "administrator",
-		Description: "ini adalah role admin",
-	}
+	// adminRole := domain.Roles{
+	// 	Name:        "administrator",
+	// 	Description: "ini adalah role admin",
+	// }
 
-	pesertaRole := domain.Roles{
-		Name:        "peserta",
-		Description: "ini adalah role peserta",
-	}
+	// pesertaRole := domain.Roles{
+	// 	Name:        "peserta",
+	// 	Description: "ini adalah role peserta",
+	// }
 
-	bytes, err := bcrypt.GenerateFromPassword([]byte(config.Admin.Password), 14)
-	if err != nil {
-		log.Printf("Cant generate hash password: %v", err)
-	}
+	// bytes, err := bcrypt.GenerateFromPassword([]byte(config.Admin.Password), 14)
+	// if err != nil {
+	// 	log.Printf("Cant generate hash password: %v", err)
+	// }
 
 
-	adminUser := domain.User{
-		FName:     "Admin",
-		LName:     "IAI",
-		Telephone: "_",
-		Address:   "-",
-		Email:     config.Admin.Email,
-		Password:  string(bytes),
-		RoleID:    1,
-	}
+	// adminUser := domain.User{
+	// 	FName:     "Admin",
+	// 	LName:     "IAI",
+	// 	Telephone: "_",
+	// 	Address:   "-",
+	// 	Email:     config.Admin.Email,
+	// 	Password:  string(bytes),
+	// 	RoleID:    1,
+	// }
 
-	errAdminRole := getDB.Create(&adminRole).Error
-	if errAdminRole != nil {
-		log.Printf("Cannot create role admin: %s", errAdminRole.Error())
-	}
+	// errAdminRole := getDB.Create(&adminRole).Error
+	// if errAdminRole != nil {
+	// 	log.Printf("Cannot create role admin: %s", errAdminRole.Error())
+	// }
 
-	errpesertaRoles := getDB.Create(&pesertaRole).Error
-	if errpesertaRoles != nil {
-		log.Printf("Cannot create role peserta: %s", errpesertaRoles.Error())
-	}
+	// errpesertaRoles := getDB.Create(&pesertaRole).Error
+	// if errpesertaRoles != nil {
+	// 	log.Printf("Cannot create role peserta: %s", errpesertaRoles.Error())
+	// }
 
-	errAdmin := getDB.Create(&adminUser).Error
-	if errAdmin != nil {
-		log.Printf("Cnnot create administrator: %s", errAdmin.Error())
-	}
+	// errAdmin := getDB.Create(&adminUser).Error
+	// if errAdmin != nil {
+	// 	log.Printf("Cnnot create administrator: %s", errAdmin.Error())
+	// }
 
 	log.Println("Success migration and create roles & administrator")
 	return getDB

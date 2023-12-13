@@ -3,6 +3,7 @@ package handler
 import (
 	"be-project/entity/domain"
 	"be-project/helper"
+	"be-project/middleware"
 
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
@@ -36,35 +37,54 @@ func (event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(body, &req)
 
-	data, err := event.service.Create(req)
-	if err != nil {
-		log.Printf("Cannot create event to service, because: %s", err.Error())
-		response := web.WebValidationError{
-			Message: "You cant create event",
-			Errors:  err,
+	errCheck := middleware.ValidateTokenAdmin(r)
+	if errCheck != nil {
+		log.Printf("You cant see this, just admin, %s", errCheck.Error())
+		response := web.ResponseFailure{
+			Code:    http.StatusForbidden,
+			Message: "You cant find role by this id",
+			Error: errCheck,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
-		w.WriteHeader(http.StatusBadRequest)
+		
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
 		w.Write(result)
-		return
 	} else {
-		response := web.ResponseSuccess{
-			Code:    http.StatusOK,
-			Message: "Success create event",
-			Data:    data,
-		}
+
+		data, err := event.service.Create(req)
+		if err != nil {
+			log.Printf("Cannot create event to service, because: %s", err.Error())
+			response := web.WebValidationError{
+				Message: "You cant create event",
+				Errors:  err,
+			}
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
 	
-		result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(result)
+			return
+		} else {
+			response := web.ResponseSuccess{
+				Code:    http.StatusOK,
+				Message: "Success create event",
+				Data:    data,
+			}
+		
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+		
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-	
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
 	}
 }
 
@@ -118,36 +138,55 @@ func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.Unmarshal(body, &req)
-	data, err := event.service.Update(uint(id), req)
-	if err != nil {
-		log.Printf("Cannot update event to service, because: %s", err.Error())
+	errCheck := middleware.ValidateTokenAdmin(r)
+	if errCheck != nil {
+		log.Printf("You cant see this, just admin, %s", errCheck.Error())
 		response := web.ResponseFailure{
-			Message: "You cant update event",
-			Error:  err,
-			Code: 400,
+			Code:    http.StatusForbidden,
+			Message: "You cant find role by this id",
+			Error: errCheck,
 		}
-
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
-		w.WriteHeader(http.StatusBadRequest)
+		
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
 		w.Write(result)
 	} else {
-		response := web.ResponseSuccess{
-			Code:    http.StatusOK,
-			Message: "Success update event",
-			Data:    data,
-		}
+		
+		data, err := event.service.Update(uint(id), req)
+		if err != nil {
+			log.Printf("Cannot update event to service, because: %s", err.Error())
+			response := web.ResponseFailure{
+				Message: "You cant update event",
+				Error:  err,
+				Code: 400,
+			}
 	
-		result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
-		}
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
 	
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(result)
+		} else {
+			response := web.ResponseSuccess{
+				Code:    http.StatusOK,
+				Message: "Success update event",
+				Data:    data,
+			}
+		
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+		
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
+		}
 	}
 }
 

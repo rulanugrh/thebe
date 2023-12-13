@@ -8,6 +8,7 @@ import (
 	portService "be-project/service/port"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
@@ -16,12 +17,14 @@ import (
 type userService struct {
 	repository portRepo.UserRepository
 	validate   *validator.Validate
+	r *http.Request
 }
 
 func NewUserService(repo portRepo.UserRepository) portService.UserInterface {
 	return &userService{
 		repository: repo,
 		validate:   validator.New(),
+		r: &http.Request{},
 	}
 }
 

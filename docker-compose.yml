@@ -28,6 +28,7 @@ services:
       - SANDBOX_SERVER=${SANDBOX_SERVER}
       - PRODUCTION_CLIENT=${PRODUCTION_CLIENT}
       - PRODUCTION_SERVER=${PRODUCTION_SERVER}
+      - APP_ORIGIN=${APP_ORIGIN}
     build:
       context: .
       dockerfile: Dockerfile

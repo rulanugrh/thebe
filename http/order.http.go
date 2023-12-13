@@ -4,6 +4,7 @@ import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
+	"be-project/middleware"
 	portService "be-project/service/port"
 	"encoding/json"
 	"io/ioutil"
@@ -112,34 +113,53 @@ func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.Unmarshal(body, &req)
-	data, err := order.service.Update(parameter, req)
-	if err != nil {
-		log.Printf("Cannot update order to service, because: %s", err.Error())
+	errCheck := middleware.ValidateTokenAdmin(r)
+	if errCheck != nil {
+		log.Printf("You cant see this, just admin, %s", errCheck.Error())
 		response := web.ResponseFailure{
-			Code:    http.StatusBadRequest,
-			Message: "You cant update order",
-			Error: err,
+			Code:    http.StatusForbidden,
+			Message: "You cant find role by this id",
+			Error: errCheck,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
+		
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
 		w.Write(result)
-		w.WriteHeader(http.StatusBadRequest)
 	} else {
-		response := web.ResponseSuccess{
-			Code:    http.StatusOK,
-			Message: "Success update order",
-			Data:    data,
-		}
+		data, err := order.service.Update(parameter, req)
+		if err != nil {
+			log.Printf("Cannot update order to service, because: %s", err.Error())
+			response := web.ResponseFailure{
+				Code:    http.StatusBadRequest,
+				Message: "You cant update order",
+				Error: err,
+			}
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
 	
-		result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
+			w.Write(result)
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+			response := web.ResponseSuccess{
+				Code:    http.StatusOK,
+				Message: "Success update order",
+				Data:    data,
+			}
+		
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+		
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-	
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
+		
 	}
 }

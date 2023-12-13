@@ -45,15 +45,67 @@ func ValidateToken(token string) error {
 
 	if err != nil {
 		log.Printf("Token is not valid: %v", err)
+		return web.Error{
+			Code: 401,
+			Message: "token is not valid",
+		}
 	}
 
 	claims, errClaim := tokens.Claims.(*jwtClaims)
 	if !errClaim {
 		log.Printf("Cant claim token %v", errClaim)
+		return web.Error{
+			Code: http.StatusBadRequest,
+			Message: "cant claimed token",
+		}
+
 	}
+
 
 	if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
 		log.Printf("token expired")
+		return web.Error{
+			Code: http.StatusLocked,
+			Message: "token is expired",
+		}
+	}
+
+	return nil
+
+}
+
+func ValidateTokenAdmin(r *http.Request) error {
+	conf := config.GetConfig()
+	token := r.Header.Get("Authorization")
+	tokens, _ := jwt.ParseWithClaims(token, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(conf.Secret), nil
+	})
+
+
+	claims, errClaim := tokens.Claims.(*jwtClaims)
+	if !errClaim {
+		log.Printf("Cant claim token %v", errClaim)
+		return web.Error{
+			Code: http.StatusBadRequest,
+			Message: "cant claimed token",
+		}
+	}
+
+
+	if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
+		log.Printf("token expired")
+		return web.Error{
+			Code: http.StatusLocked,
+			Message: "token is expired",
+		}
+	}
+
+	if claims.Name != conf.Admin.Email {
+		log.Printf("Cannot use, just admin")
+		return web.Error{
+			Code: 403,
+			Message: "cannot use this page, just admin",
+		}
 	}
 
 	return nil
@@ -74,6 +126,7 @@ func JWTVerify(next http.Handler) http.Handler {
 			}
 
 			response, _ := json.Marshal(res)
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write(response)
 		}
@@ -83,9 +136,11 @@ func JWTVerify(next http.Handler) http.Handler {
 			res := web.ResponseFailure{
 				Message: "Cant login because token is not valid",
 				Code:    http.StatusBadRequest,
+				Error: err,
 			}
 
 			response, _ := json.Marshal(res)
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write(response)
 		}
