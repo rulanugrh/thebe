@@ -120,11 +120,92 @@ docker-compose up -d app
 }
 ```
 
-
 ## Authentication
 > Semua api wajib di tambahkan authentikasi dari hasil login user
 - Header :
     - Authorization: Token JWT
+
+#### FindByID Event
+- Method : GET
+- Endpoint : `/api/event/{id}`
+- Header :
+    - Accept: `application/json`
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "name": "string",
+        "desc": "string",
+        "price": "int",
+        "participant": "array"
+    }
+}
+```
+#### Create Order
+- Method : POST
+- Endpoint : `/api/order/`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+```json
+{
+    "user_id": "int",
+    "event_id": "int",
+    "delegasi": "array ( optional )"
+}
+
+```
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "uuid": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "string",
+        "address": "string",
+        "telephone": "string",
+        "event_name": "string",
+        "event_price": "int"
+    }
+}
+```
+
+#### Create Submission Task
+- Method : POST
+- Endpoint : `/api/order/`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+```json
+{
+    "name": "string",
+    "user_id": "int",
+    "event_id": "int",
+    "file": "string"
+}
+
+```
+
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "name": "string",
+        "event": "string",
+        "filename": "string"
+    }
+}
+```
+
+## Just Admin
+> Untuk query hal ini hanya admin yang bisa
 
 #### Create Event
 - Method : POST
@@ -154,24 +235,6 @@ docker-compose up -d app
 }
 ```
 
-#### FindByID Event
-- Method : GET
-- Endpoint : `/api/event/{id}`
-- Header :
-    - Accept: `application/json`
-- Response :
-```json
-{
-    "code": "number",
-    "message": "string",
-    "data": {
-        "name": "string",
-        "desc": "string",
-        "price": "int",
-        "participant": "array"
-    }
-}
-```
 #### Update Event
 - Method : PUT
 - Endpoint : `/api/event/{id}`
