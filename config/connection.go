@@ -191,7 +191,7 @@ func initConfig() *Config {
 	conf.Midtrans.Sandbox.Server = os.Getenv("SANDBOX_SERVER")
 	conf.Midtrans.Production.Client = os.Getenv("PRODUCTION_CLIENT")
 	conf.Midtrans.Production.Client = os.Getenv("PRODUCTION_SERVER")
-	conf.Midtrans.EnvironmentType = os.Getenv("MIDRANS_ENVIRONTMENT")
+	conf.Midtrans.EnvironmentType = os.Getenv("MIDTRANS_ENVIRONTMENT")
 	conf.Secret = os.Getenv("APP_SECRET")
 	conf.Admin.Password = os.Getenv("ADMIN_PASSWORD")
 	conf.Admin.Email = os.Getenv("ADMIN_EMAIL")
