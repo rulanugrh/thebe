@@ -75,7 +75,7 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(body, &req)
 
-	data, err := user.service.Login(req)
+	_, err := user.service.Login(req)
 	if errChck := config.DB.Where("email = ?", req.Email).First(&compare).Error; errChck != nil {
 		log.Printf("cannot find with this email")
 	}
@@ -113,7 +113,7 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseSuccess{
 			Code:    http.StatusOK,
 			Message: "Success login account",
-			Data:    data,
+			Data:    token,
 		}
 
 		result, errMarshalling := json.Marshal(response)
@@ -121,15 +121,14 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		cookies := http.Cookie{
+		http.SetCookie(w,&http.Cookie{
 			Name:    "Set-Cookie",
 			Value:   token,
 			Expires: time.Now().Add(1 * time.Hour),
 			HttpOnly: true,
 			Secure: false,
-		}
+		})
 
-		r.Header.Add(cookies.Name, cookies.Value)
 		w.WriteHeader(http.StatusOK)
 		w.Write(result)
 	}

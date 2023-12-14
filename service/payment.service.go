@@ -22,16 +22,16 @@ type paymentService struct {
 	s                  snap.Client
 }
 
-func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, paymentAppendUrl string, paymetnOverride string, snaps snap.Client) portService.PaymentInterface {
+func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, paymentAppendUrl string, paymentOverride string, snaps snap.Client) portService.PaymentInterface {
 	midtrans.SetPaymentAppendNotification(paymentAppendUrl)
-	midtrans.SetPaymentOverrideNotification(paymetnOverride)
+	midtrans.SetPaymentOverrideNotification(paymentOverride)
 
 	return &paymentService{
 		repository:         repository,
 		envMidtrans:        env,
 		serverKey:          serverkey,
 		paymentAppendUrl:   paymentAppendUrl,
-		paymentOverrideUrl: paymetnOverride,
+		paymentOverrideUrl: paymentOverride,
 		s:                  snaps,
 	}
 }
@@ -66,10 +66,15 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 
 	payment.s.Options.SetPaymentOverrideNotification(payment.paymentOverrideUrl)
 	payment.s.Options.SetPaymentAppendNotification(payment.paymentAppendUrl)
+	payment.s.Env = payment.envMidtrans
+	payment.s.ServerKey = payment.serverKey
 
 	createTransaction, errTransaction := payment.s.CreateTransaction(&transaction)
 	if errTransaction != nil {
-		return nil, errTransaction
+		return nil, web.Error{
+			Message: errTransaction.GetMessage(),
+			Code: 400,
+		}
 	}
 
 	responseData := web.ResponsePayment{

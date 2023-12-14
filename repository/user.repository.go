@@ -23,7 +23,7 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 	req.RoleID = 2
 
 	errFind := user.db.Where("email = ?", req.Email).Error
-	if errFind == nil {
+	if errFind != nil {
 		log.Printf("Email has been used")
 		return nil, web.Error{
 			Message: "Email has been used",

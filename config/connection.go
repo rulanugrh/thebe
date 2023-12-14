@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/snap"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,14 +28,19 @@ type Config struct {
 		AllowOrigin string
 	}
 
-	Sandbox struct {
-		Client string
-		Server string
-	}
 
-	Production struct {
-		Client string
-		Server string
+	Midtrans struct {
+		EnvironmentType string
+		Production struct {
+			Client string
+			Server string
+		}
+		Sandbox struct {
+			Client string
+			Server string
+		}
+		PaymentAppendURL string
+		PaymentOverrideURL string
 	}
 
 	Secret string
@@ -66,6 +73,25 @@ func GetConnection() *gorm.DB {
 	DB = db
 	log.Print("Success connect to database")
 	return db
+}
+
+func InitMidtrans() ( snap.Client, midtrans.EnvironmentType, string )  {
+	var snap snap.Client
+	conf := GetConfig()
+	if conf.Midtrans.EnvironmentType == "Sandbox" {
+		midtrans.Environment = midtrans.Sandbox
+		midtrans.ServerKey = conf.Midtrans.Sandbox.Server
+		snap.Env = midtrans.Sandbox
+		snap.ServerKey = conf.Midtrans.Sandbox.Server
+	} else {
+		midtrans.Environment = midtrans.Production
+		midtrans.ServerKey = conf.Midtrans.Production.Server
+		snap.Env = midtrans.Production
+		snap.ServerKey = conf.Midtrans.Production.Server
+	}
+
+	return snap, midtrans.Environment, midtrans.ServerKey
+
 }
 
 func RunMigration() *gorm.DB {
@@ -140,11 +166,14 @@ func initConfig() *Config {
 		conf.Database.Name = ""
 		conf.Database.User = ""
 		conf.Database.Pass = ""
-		conf.Sandbox.Client = ""
-		conf.Sandbox.Server = ""
-		conf.Production.Client = ""
-		conf.Production.Server = ""
+		conf.Midtrans.Sandbox.Client = ""
+		conf.Midtrans.Sandbox.Server = ""
+		conf.Midtrans.Production.Client = ""
+		conf.Midtrans.Production.Server = ""
 		conf.Secret = ""
+		conf.Midtrans.EnvironmentType = ""
+		conf.Midtrans.PaymentAppendURL = ""
+		conf.Midtrans.PaymentOverrideURL = ""
 
 		return &conf
 	}
@@ -158,13 +187,17 @@ func initConfig() *Config {
 	conf.Database.Name = os.Getenv("DATABASE_NAME")
 	conf.Database.Pass = os.Getenv("DATABASE_PASS")
 	conf.Database.User = os.Getenv("DATABASE_USER")
-	conf.Sandbox.Client = os.Getenv("SANDBOX_CLIENT")
-	conf.Sandbox.Server = os.Getenv("SANDBOX_SERVER")
-	conf.Production.Client = os.Getenv("PRODUCTION_CLIENT")
-	conf.Production.Client = os.Getenv("PRODUCTION_SERVER")
+	conf.Midtrans.Sandbox.Client = os.Getenv("SANDBOX_CLIENT")
+	conf.Midtrans.Sandbox.Server = os.Getenv("SANDBOX_SERVER")
+	conf.Midtrans.Production.Client = os.Getenv("PRODUCTION_CLIENT")
+	conf.Midtrans.Production.Client = os.Getenv("PRODUCTION_SERVER")
+	conf.Midtrans.EnvironmentType = os.Getenv("MIDRANS_ENVIRONTMENT")
 	conf.Secret = os.Getenv("APP_SECRET")
 	conf.Admin.Password = os.Getenv("ADMIN_PASSWORD")
 	conf.Admin.Email = os.Getenv("ADMIN_EMAIL")
+	conf.Midtrans.PaymentAppendURL = os.Getenv("MIDTRANS_APPEND_URL")
+	conf.Midtrans.PaymentAppendURL = os.Getenv("MIDTRANS_OVERRIDE_URL")
+
 
 	return &conf
 

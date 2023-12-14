@@ -2,6 +2,7 @@ package repository
 
 import (
 	"be-project/entity/domain"
+	"be-project/entity/web"
 	portRepo "be-project/repository/port"
 	"log"
 
@@ -62,6 +63,11 @@ func (payment *paymentRepository) Save(req domain.Transaction) error {
 	err := payment.db.Create(req).Error
 	if err != nil {
 		log.Printf("Cannot save transaction into db: %s", err.Error())
+		return web.Error{
+			Message: "cant save to transaction",
+			Code: 500,
+
+		}
 	}
 
 	return nil
