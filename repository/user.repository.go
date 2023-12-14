@@ -2,6 +2,7 @@ package repository
 
 import (
 	"be-project/entity/domain"
+	"be-project/entity/web"
 	portRepo "be-project/repository/port"
 	"log"
 
@@ -20,6 +21,15 @@ func NewUserRepository(db *gorm.DB) portRepo.UserRepository {
 
 func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 	req.RoleID = 2
+
+	errFind := user.db.Where("email = ?", req.Email).Error
+	if errFind == nil {
+		log.Printf("Email has been used")
+		return nil, web.Error{
+			Message: "Email has been used",
+			Code: 400,
+		}
+	}
 
 	err := user.db.Create(&req).Error
 	if err != nil {
