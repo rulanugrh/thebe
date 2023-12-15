@@ -30,8 +30,8 @@ func (user *userRepository) Register(req domain.UserRegister) (*domain.User, err
 		RoleID: 2,
 	}
 
-	errFind := user.db.Where("email = ?", models.Email).Error
-	if errFind != nil {
+	errFind := user.db.Where("email = ?", req.Email).Find(&models).Error
+	if errFind == nil {
 		log.Printf("Email has been used")
 		return nil, web.Error{
 			Message: "Email has been used",
