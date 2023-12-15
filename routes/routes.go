@@ -45,6 +45,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/event/{id}/submission", event.SubmissionTask).Methods("POST")
 	
 	routerGroup.HandleFunc("/order/checkout/", payment.Create).Methods("POST")
+	routerGroup.HandleFunc("/order/{id}/status", payment.HandlingStatus).Methods("GET")
 	
 	host := fmt.Sprintf("%s:%s", conf.App.Host, conf.App.Port)
 	server := http.Server{

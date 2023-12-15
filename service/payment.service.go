@@ -5,7 +5,11 @@ import (
 	"be-project/entity/web"
 	portRepo "be-project/repository/port"
 	portService "be-project/service/port"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
 	"log"
+	"net/http"
 	"strconv"
 
 	"github.com/midtrans/midtrans-go"
@@ -125,4 +129,41 @@ func (payment *paymentService) FindAll() ([]web.ResponseForPayment, error) {
 	}
 
 	return responsePayment, nil
+}
+
+func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, error){
+
+	url := fmt.Sprintf("%s/%s/%s", payment.s.Env.BaseUrl(), id, "status")
+	req, errRequest := http.NewRequest(http.MethodGet, url, nil)
+	if errRequest != nil {
+		return nil, web.Error{
+			Message: "cannot request to get status",
+			Code: 400,
+		}
+	}
+
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "Basic " + base64.StdEncoding.EncodeToString([]byte(payment.s.ServerKey)))
+	req.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, web.Error{
+			Message: "cant get status",
+			Code: 400,
+		}
+	}
+
+	defer response.Body.Close()
+
+	status := web.StatusPayment{}
+	errDecode := json.NewDecoder(response.Body).Decode(&status)
+	if errDecode != nil {
+		return nil, web.Error{
+			Message: "cannot decode message",
+			Code: 500,
+		}
+	}
+
+	return &status, nil
 }

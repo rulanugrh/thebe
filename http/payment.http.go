@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type paymentHandler struct {
@@ -62,3 +64,37 @@ func (payment *paymentHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (payment *paymentHandler) FindByID(w http.ResponseWriter, r *http.Request) {}
 func (payment *paymentHandler) FindAll(w http.ResponseWriter, r *http.Request) {}
+func (payment *paymentHandler) HandlingStatus(w http.ResponseWriter, r *http.Request) {
+	getID := mux.Vars(r)
+	parameter := getID["id"]
+
+	data, err := payment.service.HandlingStatus(parameter)
+	if err != nil {
+		log.Printf("Cannot find status  with this id, because: %s", err.Error())
+		response := web.WebValidationError{
+			Message: "You cant find status payments",
+			Errors:  err,
+		}
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+
+		w.WriteHeader(500)
+		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
+	}
+}

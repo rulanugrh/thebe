@@ -9,4 +9,5 @@ type PaymentInterface interface {
 	Create(req domain.Payment) (*web.ResponsePayment, error)
 	FindByID(id string) (*web.ResponseForPayment, error)
 	FindAll() ([]web.ResponseForPayment, error)
+	HandlingStatus( id string ) (*web.StatusPayment, error)
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"be-project/entity/domain"
+	"be-project/entity/web"
 	portRepo "be-project/repository/port"
 	"log"
 	"math/rand"
@@ -41,6 +42,26 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 	}
 
 	return &models, nil
+}
+
+func (order *orderRepository) AppendToEvents(req domain.OrderRegister) error {
+	var models domain.Order
+	models.UUID = rand.Int()
+	models.Name = "order-" + strconv.Itoa(models.UUID)
+	models.EventID = req.EventID
+	models.UserID = req.EventID
+	models.Delegasi = req.Delegasi
+
+	errAppend := order.db.Model(&models.Events).Association("Participants").Append(&models)
+	if errAppend != nil {
+		log.Printf("Cant append data because: %s", errAppend.Error())
+		return web.Error{
+			Message: "Cant append to events",
+			Code: 500,
+		}
+	}
+
+	return nil
 }
 
 func (order *orderRepository) Update(uuid string, req domain.Order) (*domain.Order, error) {

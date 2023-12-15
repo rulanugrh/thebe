@@ -2,6 +2,7 @@ package web
 
 import (
 	"html/template"
+	"time"
 )
 
 type ResponseUser struct {
@@ -132,3 +133,14 @@ func (err Error) Error() string {
 	return err.Message
 }
 
+
+type StatusPayment struct {
+	StatusCode string `json:"status_code"`
+	StatusMessage string `json:"status_message"`
+	OrderID string `json:"order_id"`
+	PaymentType string `json:"payment_type"`
+	GroosAmount int64 `json:"gross_amount"`
+	TransactionTime time.Time `json:"transaction_time"`
+	TransactionExpire time.Time `json:"transaction_expire"`
+
+}
