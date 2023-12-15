@@ -81,15 +81,16 @@ func InitMidtrans() ( snap.Client, midtrans.EnvironmentType, string )  {
 	if conf.Midtrans.EnvironmentType == "Sandbox" {
 		midtrans.Environment = midtrans.Sandbox
 		midtrans.ServerKey = conf.Midtrans.Sandbox.Server
-		snap.Env = midtrans.Sandbox
+		snap.Env = midtrans.Environment
 		snap.ServerKey = conf.Midtrans.Sandbox.Server
 	} else {
 		midtrans.Environment = midtrans.Production
 		midtrans.ServerKey = conf.Midtrans.Production.Server
-		snap.Env = midtrans.Production
+		snap.Env = midtrans.Environment
 		snap.ServerKey = conf.Midtrans.Production.Server
 	}
 
+	snap.New(midtrans.ServerKey, midtrans.Environment)
 	return snap, midtrans.Environment, midtrans.ServerKey
 
 }
@@ -129,6 +130,21 @@ func RunMigration() *gorm.DB {
 		RoleID:    1,
 	}
 
+	errFind := getDB.Where("name = ?", adminRole.Name).Find(&adminRole).Error
+	if errFind == nil {
+		log.Printf("Cannot create because role has been created")
+	}
+
+	errFind = getDB.Where("name = ?", pesertaRole.Name).Find(&pesertaRole).Error
+	if errFind == nil {
+		log.Printf("Cannot create because role has been created")
+	}
+	
+	errFind = getDB.Where("f_name = ?", adminUser.FName).Find(&adminUser).Error
+	if errFind == nil {
+		log.Printf("Cannot create because user has been created")
+	}
+	
 	errAdminRole := getDB.Create(&adminRole).Error
 	if errAdminRole != nil {
 		log.Printf("Cannot create role admin: %s", errAdminRole.Error())

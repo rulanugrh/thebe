@@ -31,7 +31,7 @@ type ResponseArtikel struct {
 }
 
 type ResponseOrder struct {
-	UUID       string `json:"uuid"`
+	UUID       int `json:"uuid"`
 	FName      string `json:"first_name"`
 	LName      string `json:"last_name"`
 	Email      string `json:"email"`
@@ -68,7 +68,7 @@ type ResponseSubmission struct {
 }
 
 type ResponseOrderRekarda struct {
-	UUID       string         `json:"uuid"`
+	UUID       int         `json:"uuid"`
 	FName      string         `json:"first_name"`
 	LName      string         `json:"last_name"`
 	Email      string         `json:"email"`

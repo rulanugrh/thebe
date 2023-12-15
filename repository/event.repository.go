@@ -18,14 +18,19 @@ func NewEventRepository(db *gorm.DB) portRepo.EventInterface {
 	}
 }
 
-func (event *eventRepository) Create(req domain.Event) (*domain.Event, error) {
-	err := event.db.Create(&req).Error
+func (event *eventRepository) Create(req domain.EventRegister) (*domain.Event, error) {
+	models := domain.Event{
+		Name: req.Name,
+		Price: req.Price,
+		Description: req.Description,
+	}
+	err := event.db.Create(&models).Error
 	if err != nil {
 		log.Printf("Cannot create event, because: %s", err.Error())
 		return nil, err
 	}
 
-	return &req, nil
+	return &models, nil
 }
 
 func (event *eventRepository) FindByID(id uint) (*domain.Event, error) {

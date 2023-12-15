@@ -28,7 +28,7 @@ func NewUserHandler(service portService.UserInterface) portHandler.UserInterface
 }
 
 func (user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
-	var req domain.User
+	var req domain.UserRegister
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())

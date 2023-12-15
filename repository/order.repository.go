@@ -4,8 +4,9 @@ import (
 	"be-project/entity/domain"
 	portRepo "be-project/repository/port"
 	"log"
+	"math/rand"
+	"strconv"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -19,28 +20,32 @@ func NewOrderRepository(db *gorm.DB) portRepo.OrderRepository {
 	}
 }
 
-func (order *orderRepository) Create(req domain.Order) (*domain.Order, error) {
-	req.UUID = uuid.New().String()
-	req.Name = "order-" + req.UUID
+func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, error) {
+	var models domain.Order
+	models.UUID = rand.Int()
+	models.Name = "order-" + strconv.Itoa(models.UUID)
+	models.EventID = req.EventID
+	models.UserID = req.EventID
+	models.Delegasi = req.Delegasi
 
-	err := order.db.Create(&req).Error
+	err := order.db.Create(&models).Error
 	if err != nil {
 		log.Printf("Cant creaet order. because: %s", err.Error())
 		return nil, err
 	}
 
-	errsPreload := order.db.Preload("UserDetail").Preload("Events").Find(&req).Error
+	errsPreload := order.db.Preload("UserDetail").Preload("Events").Find(&models).Error
 	if errsPreload != nil {
 		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
 		return nil, errsPreload
 	}
 
-	errAppend := order.db.Model(&req.Events).Association("Participants").Append(&req)
+	errAppend := order.db.Model(&models.Events).Association("Participants").Append(&models)
 	if errAppend != nil {
 		log.Printf("Cant append data because: %s", errAppend.Error())
 	}
 
-	return &req, nil
+	return &models, nil
 }
 
 func (order *orderRepository) Update(uuid string, req domain.Order) (*domain.Order, error) {

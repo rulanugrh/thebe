@@ -8,7 +8,6 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/jinzhu/copier"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
 )
@@ -17,27 +16,26 @@ type paymentService struct {
 	repository         portRepo.PaymentInterface
 	envMidtrans        midtrans.EnvironmentType
 	serverKey          string
-	paymentAppendUrl   string
-	paymentOverrideUrl string
+	// paymentAppendUrl   string
+	// paymentOverrideUrl string
 	s                  snap.Client
 }
 
-func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, paymentAppendUrl string, paymentOverride string, snaps snap.Client) portService.PaymentInterface {
-	midtrans.SetPaymentAppendNotification(paymentAppendUrl)
-	midtrans.SetPaymentOverrideNotification(paymentOverride)
+func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, snaps snap.Client) portService.PaymentInterface {
+// midtrans.SetPaymentAppendNotification(paymentAppendUrl)
+	// midtrans.SetPaymentOverrideNotification(paymentOverride)
 
 	return &paymentService{
 		repository:         repository,
 		envMidtrans:        env,
 		serverKey:          serverkey,
-		paymentAppendUrl:   paymentAppendUrl,
-		paymentOverrideUrl: paymentOverride,
+		// paymentAppendUrl:   paymentAppendUrl,
+		// paymentOverrideUrl: paymentOverride,
 		s:                  snaps,
 	}
 }
 
 func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment, error) {
-	var save domain.Transaction
 	data, err := payment.repository.Create(req)
 	if err != nil {
 		return nil, err
@@ -45,8 +43,8 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 
 	transaction := snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  data.OrderID,
-			GrossAmt: 1,
+			OrderID: strconv.Itoa(data.OrderID),
+			GrossAmt: int64(data.Orders.Events.Price),
 		},
 		CustomerDetail: &midtrans.CustomerDetails{
 			FName: data.Orders.UserDetail.FName,
@@ -64,8 +62,8 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 		},
 	}
 
-	payment.s.Options.SetPaymentOverrideNotification(payment.paymentOverrideUrl)
-	payment.s.Options.SetPaymentAppendNotification(payment.paymentAppendUrl)
+	// payment.s.Options.SetPaymentOverrideNotification(payment.paymentOverrideUrl)
+	// payment.s.Options.SetPaymentAppendNotification(payment.paymentAppendUrl)
 	payment.s.Env = payment.envMidtrans
 	payment.s.ServerKey = payment.serverKey
 
@@ -78,14 +76,21 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 	}
 
 	responseData := web.ResponsePayment{
-		Name:    data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.FName,
+		Name:    data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.LName,
 		Event:   data.Orders.Events.Name,
 		Price:   data.Orders.Events.Price,
 		SnapURL: createTransaction.RedirectURL,
 		Token:   createTransaction.Token,
 	}
 
-	copier.Copy(&save, &responseData)
+	save := domain.Transaction{
+		Name: data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.LName,
+		Event: data.Orders.Events.Name,
+		Price: data.Orders.Events.Price,
+		SnapURL: createTransaction.RedirectURL,
+		Token: createTransaction.Token,
+	}
+
 	errSave := payment.repository.Save(save)
 	if errSave != nil {
 		return nil, errSave

@@ -60,7 +60,7 @@ func (payment *paymentRepository) FindAll() ([]domain.Payment, error) {
 }
 
 func (payment *paymentRepository) Save(req domain.Transaction) error {
-	err := payment.db.Create(req).Error
+	err := payment.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cannot save transaction into db: %s", err.Error())
 		return web.Error{

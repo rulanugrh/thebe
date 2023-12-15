@@ -11,7 +11,7 @@ import (
 func main() {
 	getDB := config.RunMigration()
 	snaps, env, serverKey := config.InitMidtrans()
-	conf := config.GetConfig()
+	// conf := config.GetConfig()
 
 	orderRepository := repository.NewOrderRepository(getDB)
 	userRepository := repository.NewUserRepository(getDB)
@@ -25,7 +25,7 @@ func main() {
 	roleService := service.NewRoleService(roleRepository)
 	artikelService := service.NewArtikelService(artikelRepository)
 	eventService := service.NewEventServices(eventRepository)
-	paymentService := service.NewPaymentService(paymentRepository, env, serverKey, conf.Midtrans.PaymentAppendURL, conf.Midtrans.PaymentOverrideURL, snaps)
+	paymentService := service.NewPaymentService(paymentRepository, env, serverKey, snaps)
 
 	userHandler := handler.NewUserHandler(userService)
 	orderHandler := handler.NewOrderHandler(orderService)

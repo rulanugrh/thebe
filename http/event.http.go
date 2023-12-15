@@ -28,7 +28,7 @@ func NewEventHandler(service portService.EventInterface) portHandler.EventInterf
 }
 
 func (event *eventHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var req domain.Event
+	var req domain.EventRegister
 
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {

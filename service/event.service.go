@@ -24,7 +24,7 @@ func NewEventServices(repository portRepo.EventInterface) portService.EventInter
 	}
 }
 
-func (event *eventService) Create(req domain.Event) (*web.ResponseEvent, error) {
+func (event *eventService) Create(req domain.EventRegister) (*web.ResponseEvent, error) {
 	errValidate := middleware.ValidateStruct(event.validate, req)
 	if errValidate != nil {
 		log.Printf("Struct is not valid: %s", errValidate.Error())

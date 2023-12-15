@@ -19,10 +19,18 @@ func NewUserRepository(db *gorm.DB) portRepo.UserRepository {
 	}
 }
 
-func (user *userRepository) Register(req domain.User) (*domain.User, error) {
-	req.RoleID = 2
+func (user *userRepository) Register(req domain.UserRegister) (*domain.User, error) {
+	models := domain.User {
+		FName: req.FName,
+		LName: req.LName,
+		Email: req.Email,
+		Password: req.Password,
+		Telephone: req.Telephone,
+		Address: req.Address,
+		RoleID: 2,
+	}
 
-	errFind := user.db.Where("email = ?", req.Email).Error
+	errFind := user.db.Where("email = ?", models.Email).Error
 	if errFind != nil {
 		log.Printf("Email has been used")
 		return nil, web.Error{
@@ -31,24 +39,25 @@ func (user *userRepository) Register(req domain.User) (*domain.User, error) {
 		}
 	}
 
-	err := user.db.Create(&req).Error
+	err := user.db.Create(&models).Error
 	if err != nil {
 		log.Printf("Can't create user, because: %s", err.Error())
 		return nil, err
 	}
 
-	errPreload := user.db.Preload("Role").Find(&req).Error
+	errPreload := user.db.Preload("Role").Find(&models).Error
 	if errPreload != nil {
 		log.Printf("Can't show the roles, because: %s", errPreload.Error())
 		return nil, errPreload
 	}
 
-	errAppend := user.db.Model(&req.Role).Association("Users").Append(&req)
+	errAppend := user.db.Model(&models.Role).Association("Users").Append(&models)
 	if errAppend != nil {
 		log.Printf("Can't append user, because: %s", errAppend.Error())
 	}
 
-	return &req, nil
+	
+	return &models, nil
 
 }
 

@@ -28,7 +28,7 @@ func NewUserService(repo portRepo.UserRepository) portService.UserInterface {
 	}
 }
 
-func (user *userService) Register(req domain.User) (*web.ResponseUser, error) {
+func (user *userService) Register(req domain.UserRegister) (*web.ResponseUser, error) {
 	errValidate := middleware.ValidateStruct(user.validate, req)
 	if errValidate != nil {
 		log.Printf("Struct is not valid: %s", errValidate.Error())

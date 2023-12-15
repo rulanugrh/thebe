@@ -6,7 +6,7 @@ import (
 )
 
 type UserInterface interface {
-	Register(req domain.User) (*web.ResponseUser, error)
+	Register(req domain.UserRegister) (*web.ResponseUser, error)
 	Login(req domain.UserLogin) (*web.ResponseLogin, error)
 	Update(email string, req domain.User) (*web.ResponseUser, error)
 	Delete(id uint) error

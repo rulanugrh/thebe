@@ -26,7 +26,7 @@ func NewOrderHandler(service portService.OrderInterface) portHandler.OrderInterf
 }
 
 func (order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var req domain.Order
+	var req domain.OrderRegister
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())

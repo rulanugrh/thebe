@@ -24,7 +24,7 @@ func NewOrderService(repo portRepo.OrderRepository) portService.OrderInterface {
 	}
 }
 
-func (order *orderService) Create(req domain.Order) (interface{}, error) {
+func (order *orderService) Create(req domain.OrderRegister) (interface{}, error) {
 	errValidate := middleware.ValidateStruct(order.validate, req)
 	if errValidate != nil {
 		log.Printf("Struct is not valid: %s", errValidate.Error())
