@@ -16,21 +16,14 @@ type paymentService struct {
 	repository         portRepo.PaymentInterface
 	envMidtrans        midtrans.EnvironmentType
 	serverKey          string
-	// paymentAppendUrl   string
-	// paymentOverrideUrl string
 	s                  snap.Client
 }
 
 func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, snaps snap.Client) portService.PaymentInterface {
-// midtrans.SetPaymentAppendNotification(paymentAppendUrl)
-	// midtrans.SetPaymentOverrideNotification(paymentOverride)
-
 	return &paymentService{
 		repository:         repository,
 		envMidtrans:        env,
 		serverKey:          serverkey,
-		// paymentAppendUrl:   paymentAppendUrl,
-		// paymentOverrideUrl: paymentOverride,
 		s:                  snaps,
 	}
 }
@@ -62,8 +55,6 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 		},
 	}
 
-	// payment.s.Options.SetPaymentOverrideNotification(payment.paymentOverrideUrl)
-	// payment.s.Options.SetPaymentAppendNotification(payment.paymentAppendUrl)
 	payment.s.Env = payment.envMidtrans
 	payment.s.ServerKey = payment.serverKey
 

@@ -40,11 +40,6 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 		return nil, errsPreload
 	}
 
-	errAppend := order.db.Model(&models.Events).Association("Participants").Append(&models)
-	if errAppend != nil {
-		log.Printf("Cant append data because: %s", errAppend.Error())
-	}
-
 	return &models, nil
 }
 
