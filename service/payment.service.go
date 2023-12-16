@@ -44,8 +44,7 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 			GrossAmt: int64(data.Orders.Events.Price),
 		},
 		CustomerDetail: &midtrans.CustomerDetails{
-			FName: data.Orders.UserDetail.FName,
-			LName: data.Orders.UserDetail.LName,
+			FName: data.Orders.UserDetail.Name,
 			Email: data.Orders.UserDetail.Email,
 			Phone: data.Orders.UserDetail.Telephone,
 		},
@@ -71,7 +70,7 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 	}
 
 	responseData := web.ResponsePayment{
-		Name:    data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.LName,
+		Name:    data.Orders.UserDetail.Name,
 		Event:   data.Orders.Events.Name,
 		Price:   data.Orders.Events.Price,
 		SnapURL: createTransaction.RedirectURL,
@@ -79,7 +78,7 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 	}
 
 	save := domain.Transaction{
-		Name: data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.LName,
+		Name: data.Orders.UserDetail.Name,
 		Event: data.Orders.Events.Name,
 		Price: data.Orders.Events.Price,
 		SnapURL: createTransaction.RedirectURL,
@@ -101,7 +100,7 @@ func (payment *paymentService) FindByID(id string) (*web.ResponseForPayment, err
 	}
 
 	response := web.ResponseForPayment{
-		Name:   data.Orders.UserDetail.FName + " " + data.Orders.UserDetail.FName,
+		Name:   data.Orders.UserDetail.Name,
 		Event:  data.Orders.Events.Name,
 		Price:  data.Orders.Events.Price,
 		Status: data.Orders.StatusPayment,
@@ -119,7 +118,7 @@ func (payment *paymentService) FindAll() ([]web.ResponseForPayment, error) {
 	var responsePayment []web.ResponseForPayment
 	for _, result := range data {
 		response := web.ResponseForPayment{
-			Name:   result.Orders.UserDetail.FName + " " + result.Orders.UserDetail.LName,
+			Name:   result.Orders.UserDetail.Name,
 			Event:  result.Orders.Events.Name,
 			Price:  result.Orders.Events.Price,
 			Status: result.Orders.StatusPayment,

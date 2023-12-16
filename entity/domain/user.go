@@ -7,8 +7,7 @@ import (
 type User struct {
 	// creating model for struct
 	gorm.Model
-	FName     string `json:"first_name" form:"first_name"`
-	LName     string `json:"last_name" form:"last_name"`
+	Name     string `json:"name" form:"name"`
 	Email     string `json:"email" form:"email"`
 	Password  string `json:"password" form:"password"`
 	Address   string `json:"address" form:"address"`
@@ -19,13 +18,14 @@ type User struct {
 
 
 type UserLogin struct {
+	ID uint `json:"id" form:"id"`
 	Email     string `json:"email" form:"email" validate:"required,email"`
 	Password  string `json:"password" form:"password" validate:"required,min=8"`
+	Role string `json:"role" form:"role"`
 }
 
 type UserRegister struct {
-	FName     string `json:"first_name" form:"first_name" validate:"required"`
-	LName     string `json:"last_name" form:"last_name" validate:"required"`
+	Name     string `json:"name" form:"name" validate:"required"`
 	Email     string `json:"email" form:"email" validate:"required,email"`
 	Password  string `json:"password" form:"password" validate:"required,min=8" gorm:"type:varchar(60)"`
 	Address   string `json:"address" form:"address" validate:"required"`

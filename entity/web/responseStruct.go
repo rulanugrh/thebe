@@ -6,8 +6,8 @@ import (
 )
 
 type ResponseUser struct {
-	FName     string `json:"first_name"`
-	LName     string `json:"last_name"`
+	ID uint `json:"id"`
+	Name     string `json:"name"`
 	Email     string `json:"email"`
 	Address   string `json:"address"`
 	Telephone string `json:"telephone"`
@@ -15,6 +15,7 @@ type ResponseUser struct {
 }
 
 type ResponseRole struct {
+	ID uint `json:"id"`
 	Name        string         `json:"name"`
 	Description string         `json:"description"`
 	User        []ResponseUser `json:"user"`
@@ -27,14 +28,14 @@ type ResponseCreateRole struct {
 }
 
 type ResponseArtikel struct {
+	ID uint `json:"id"`
 	Title   string        `json:"title"`
 	Content template.HTML `json:"content"`
 }
 
 type ResponseOrder struct {
 	UUID       int `json:"uuid"`
-	FName      string `json:"first_name"`
-	LName      string `json:"last_name"`
+	Name      string `json:"name"`
 	Email      string `json:"email"`
 	Address    string `json:"address"`
 	Telephone  string `json:"telephone"`
@@ -43,10 +44,13 @@ type ResponseOrder struct {
 }
 
 type ResponseLogin struct {
+	ID uint `json:"id"`
 	Email string `json:"email"`
+	Role string `json:"role"`
 }
 
 type ResponseEvent struct {
+	ID uint `json:"id" form:"id"`
 	Name        string               `json:"name" form:"name"`
 	Description string               `json:"description" form:"description"`
 	Price       int                  `json:"price" form:"price"`
@@ -70,8 +74,7 @@ type ResponseSubmission struct {
 
 type ResponseOrderRekarda struct {
 	UUID       int         `json:"uuid"`
-	FName      string         `json:"first_name"`
-	LName      string         `json:"last_name"`
+	Name      string         `json:"name"`
 	Email      string         `json:"email"`
 	Address    string         `json:"address"`
 	Telephone  string         `json:"telephone"`
@@ -81,13 +84,12 @@ type ResponseOrderRekarda struct {
 }
 
 type ListParticipant struct {
-	FName string `json:"first_name"`
-	LName string `json:"last_name"`
+	Name string `json:"name"`
+	Email string `json:"email"`
 }
 
 type ListDelegasi struct {
-	FName  string `json:"first_name"`
-	LName  string `json:"last_name"`
+	Name  string `json:"name"`
 	Gender string `json:"gender"`
 }
 

@@ -65,15 +65,14 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Participants {
 		participant := web.ListParticipant{
-			FName: res.UserDetail.FName,
-			LName: res.UserDetail.LName,
+			Name: res.UserDetail.Name,
+			Email: res.UserDetail.Email,
 		}
 
 		listParticipant = append(listParticipant, participant)
 		for _, resDelegasi := range res.Delegasi {
 			delegasi := web.ListDelegasi{
-				FName:  resDelegasi.FName,
-				LName:  resDelegasi.LName,
+				Name:  resDelegasi.Name,
 				Gender: resDelegasi.Gender,
 			}
 
@@ -119,15 +118,14 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Participants {
 		participant := web.ListParticipant{
-			FName: res.UserDetail.FName,
-			LName: res.UserDetail.LName,
+			Name: res.UserDetail.Name,
+			Email: res.UserDetail.Email,
 		}
 
 		listParticipant = append(listParticipant, participant)
 		for _, resDelegasi := range res.Delegasi {
 			delegasi := web.ListDelegasi{
-				FName:  resDelegasi.FName,
-				LName:  resDelegasi.LName,
+				Name:  resDelegasi.Name,
 				Gender: resDelegasi.Gender,
 			}
 
@@ -169,7 +167,7 @@ func (event *eventService) SubmissionTask(id uint) (*web.ResponseSubmission, err
 	}
 
 	response := web.ResponseSubmission{
-		Name:     data.Users.FName + " " + data.Users.LName,
+		Name:     data.Users.Name,
 		Event:    data.Events.Name,
 		Filename: data.Files,
 	}

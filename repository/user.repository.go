@@ -21,8 +21,7 @@ func NewUserRepository(db *gorm.DB) portRepo.UserRepository {
 
 func (user *userRepository) Register(req domain.UserRegister) (*domain.User, error) {
 	models := domain.User {
-		FName: req.FName,
-		LName: req.LName,
+		Name: req.Name,
 		Email: req.Email,
 		Password: req.Password,
 		Telephone: req.Telephone,

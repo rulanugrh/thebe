@@ -67,8 +67,7 @@ func (role *roleService) FindByID(id uint) (*web.ResponseRole, error) {
 	var users []web.ResponseUser
 	for _, user := range data.Users {
 		oneUser := web.ResponseUser{
-			FName:     user.FName,
-			LName:     user.LName,
+			Name: user.Name,
 			Email:     user.Email,
 			Address:   user.Address,
 			Telephone: user.Telephone,
@@ -100,8 +99,7 @@ func (role *roleService) Update(id uint, req domain.Roles) (*web.ResponseRole, e
 	var users []web.ResponseUser
 	for _, user := range data.Users {
 		oneUser := web.ResponseUser{
-			FName:     user.FName,
-			LName:     user.LName,
+			Name: user.Name,
 			Email:     user.Email,
 			Address:   user.Address,
 			Telephone: user.Telephone,

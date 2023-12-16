@@ -121,8 +121,7 @@ func RunMigration() *gorm.DB {
 
 
 	adminUser := domain.User{
-		FName:     "Admin",
-		LName:     "IAI",
+		Name:     "Admin",
 		Telephone: "_",
 		Address:   "-",
 		Email:     config.Admin.Email,
@@ -140,7 +139,7 @@ func RunMigration() *gorm.DB {
 		log.Printf("Cannot create because role has been created")
 	}
 	
-	errFind = getDB.Where("f_name = ?", adminUser.FName).Find(&adminUser).Error
+	errFind = getDB.Where("name = ?", adminUser.Name).Find(&adminUser).Error
 	if errFind == nil {
 		log.Printf("Cannot create because user has been created")
 	}

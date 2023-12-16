@@ -44,8 +44,7 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Delegasi {
 		delegasi := web.ListDelegasi{
-			FName:  res.FName,
-			LName:  res.LName,
+			Name:  res.Name,
 			Gender: res.Gender,
 		}
 
@@ -55,8 +54,7 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 	if req.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,
@@ -70,8 +68,7 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 	} else {
 		resultData := web.ResponseOrder{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,
@@ -97,8 +94,7 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Delegasi {
 		delegasi := web.ListDelegasi{
-			FName:  res.FName,
-			LName:  res.LName,
+			Name:  res.Name,
 			Gender: res.Gender,
 		}
 
@@ -108,8 +104,7 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	if req.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,
@@ -123,8 +118,7 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	} else {
 		resultData := web.ResponseOrder{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,
@@ -146,8 +140,7 @@ func (order *orderService) FindByUserID(userid uint) (interface{}, error) {
 	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Delegasi {
 		delegasi := web.ListDelegasi{
-			FName:  res.FName,
-			LName:  res.LName,
+			Name:  res.Name,
 			Gender: res.Gender,
 		}
 
@@ -157,8 +150,7 @@ func (order *orderService) FindByUserID(userid uint) (interface{}, error) {
 	if data.EventID == 2 {
 		resultData := web.ResponseOrderRekarda{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,
@@ -172,8 +164,7 @@ func (order *orderService) FindByUserID(userid uint) (interface{}, error) {
 	} else {
 		resultData := web.ResponseOrder{
 			UUID:       data.UUID,
-			FName:      data.UserDetail.FName,
-			LName:      data.UserDetail.LName,
+			Name:      data.UserDetail.Name,
 			Email:      data.UserDetail.Email,
 			Address:    data.UserDetail.Address,
 			Telephone:  data.UserDetail.Telephone,

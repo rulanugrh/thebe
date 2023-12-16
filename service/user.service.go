@@ -48,8 +48,8 @@ func (user *userService) Register(req domain.UserRegister) (*web.ResponseUser, e
 	}
 
 	resultData := web.ResponseUser{
-		FName:     data.FName,
-		LName:     data.LName,
+		ID: data.ID,
+		Name:     data.Name,
 		Email:     data.Email,
 		Address:   data.Address,
 		Telephone: data.Telephone,
@@ -81,7 +81,9 @@ func (user *userService) Login(req domain.UserLogin) (*web.ResponseLogin, error)
 		}
 	}
 	resultData := web.ResponseLogin{
+		ID: data.ID,
 		Email: data.Email,
+		Role: data.Role.Name,
 	}
 
 	return &resultData, nil
@@ -98,8 +100,8 @@ func (user *userService) Update(email string, req domain.User) (*web.ResponseUse
 		}
 	}
 	resultData := web.ResponseUser{
-		FName:     data.FName,
-		LName:     data.LName,
+		ID: data.ID,
+		Name:     data.Name,
 		Email:     data.Email,
 		Address:   data.Address,
 		Telephone: data.Telephone,
