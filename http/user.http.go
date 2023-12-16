@@ -187,6 +187,7 @@ func (user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 			Error:  err,
 			Code: 400,
 		}
+		
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
@@ -210,4 +211,37 @@ func (user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		w.Write(result)
 	}
 
+}
+
+func (user *userHandler) ValidateToken(w http.ResponseWriter, r *http.Request) {
+	resp := r.Header.Get("Set-Cookie")
+	err := middleware.ValidateToken(resp)
+	if err != nil {
+		response := web.ResponseFailure{
+			Message: "Token not valid",
+			Error:  err,
+			Code: 500,
+		}
+		
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
+	}
+
+	response := web.ResponseSuccess{
+		Code:    http.StatusOK,
+		Message: "token valid",
+	}
+
+	result, errMarshalling := json.Marshal(response)
+	if errMarshalling != nil {
+		log.Printf("Cannot marshall response")
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }

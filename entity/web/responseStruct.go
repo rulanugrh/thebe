@@ -135,6 +135,7 @@ func (err Error) Error() string {
 }
 
 
+
 type StatusPayment struct {
 	Currency string `json:"currency"`
 	FraudStatus string `json:"fraud_status"`

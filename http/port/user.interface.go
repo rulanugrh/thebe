@@ -7,4 +7,5 @@ type UserInterface interface {
 	Login(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
+	ValidateToken(w http.ResponseWriter, r *http.Request)
 }
