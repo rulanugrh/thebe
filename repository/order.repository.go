@@ -70,9 +70,9 @@ func (order *orderRepository) Update(uuid string, req domain.Order) (*domain.Ord
 	return &updateOrder, nil
 }
 
-func (order *orderRepository) FindByUserID(userID uint) (*domain.Order, error) {
+func (order *orderRepository) FindByUserID(uuid string) (*domain.Order, error) {
 	var orderFind domain.Order
-	err := order.db.Preload("UserDetail").Preload("Events").Where("user_id = ?", userID).Find(&orderFind).Error
+	err := order.db.Preload("UserDetail").Preload("Events").Where("uuid = ?", uuid).Find(&orderFind).Error
 
 	if err != nil {
 		log.Printf("Cant find order with this user id: %s", err.Error())

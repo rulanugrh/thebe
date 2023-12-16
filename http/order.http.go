@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -66,10 +65,9 @@ func (order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
 	getID := mux.Vars(r)
-	parameter := getID["user_id"]
-	id, _ := strconv.Atoi(parameter)
+	parameter := getID["uuid"]
 
-	data, err := order.service.FindByUserID(uint(id))
+	data, err := order.service.FindByUserID(parameter)
 	if err != nil {
 		log.Printf("Cannot find order with this id to service, because: %s", err.Error())
 		response := web.ResponseFailure{

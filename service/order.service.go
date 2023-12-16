@@ -130,7 +130,7 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	}
 }
 
-func (order *orderService) FindByUserID(userid uint) (interface{}, error) {
+func (order *orderService) FindByUserID(userid string) (interface{}, error) {
 	data, err := order.repository.FindByUserID(userid)
 	if err != nil {
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
