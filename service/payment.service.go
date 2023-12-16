@@ -18,6 +18,7 @@ import (
 
 type paymentService struct {
 	repository         portRepo.PaymentInterface
+	orderRepo portRepo.OrderRepository
 	envMidtrans        midtrans.EnvironmentType
 	serverKey          string
 	s                  snap.Client
@@ -89,6 +90,38 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 	if errSave != nil {
 		return nil, errSave
 	}
+	history, errHistory := payment.HandlingStatus(strconv.Itoa(req.OrderID))
+	if errHistory != nil {
+		return nil, web.Error{
+			Message: "Tidak bisa mendapatkan status payment",
+			Code: 400,
+		}
+	}
+
+	switch history.StatusCode {
+	case "200":
+		req.Orders.StatusPayment = "success"
+		err := payment.orderRepo.AppendToEvents(req)
+		if err != nil {
+			return nil, web.Error{
+				Message: "Tidak bisa menambahkanmu ke dalam events",
+				Code: 500,
+			}
+		}
+	case "201":
+		req.Orders.StatusPayment = "pending"
+		return nil, web.Error{
+			Message: "Pembayaran Pending, tunggu sebentar",
+			Code: 201,
+		}
+	case "202":
+		req.Orders.StatusPayment = "denied"
+		return nil, web.Error{
+			Message: "Pembayaran kamu ditolak",
+			Code: 202,
+		}
+
+	}
 
 	return &responseData, nil
 }
@@ -136,7 +169,7 @@ func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, 
 	req, errRequest := http.NewRequest(http.MethodGet, url, nil)
 	if errRequest != nil {
 		return nil, web.Error{
-			Message: "cannot request to get status",
+			Message: "Tidak bisa request untuk mendapatkan status",
 			Code: 400,
 		}
 	}
@@ -159,7 +192,7 @@ func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, 
 	errDecode := json.NewDecoder(response.Body).Decode(&status)
 	if errDecode != nil {
 		return nil, web.Error{
-			Message: "cannot decode message",
+			Message: "Tidak bisa membaca response body",
 			Code: 500,
 		}
 	}

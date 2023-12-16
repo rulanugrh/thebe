@@ -44,13 +44,19 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 	return &models, nil
 }
 
-func (order *orderRepository) AppendToEvents(req domain.OrderRegister) error {
+func (order *orderRepository) AppendToEvents(req domain.Payment) error {
 	var models domain.Order
 	models.UUID = rand.Int()
 	models.Name = "order-" + strconv.Itoa(models.UUID)
-	models.EventID = req.EventID
-	models.UserID = req.EventID
-	models.Delegasi = req.Delegasi
+	models.EventID = req.Orders.EventID
+	models.UserID = req.Orders.UserID
+	models.Delegasi = req.Orders.Delegasi
+
+	errPreload := order.db.Preload("Orders").Find(&req).Error
+	if errPreload != nil {
+		log.Printf("Cant find order. because: %s", errPreload.Error())
+		return errPreload
+	}
 
 	errAppend := order.db.Model(&models.Events).Association("Participants").Append(&models)
 	if errAppend != nil {
