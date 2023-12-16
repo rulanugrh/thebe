@@ -2,7 +2,6 @@ package web
 
 import (
 	"html/template"
-	"time"
 )
 
 type ResponseUser struct {
@@ -34,7 +33,7 @@ type ResponseArtikel struct {
 }
 
 type ResponseOrder struct {
-	UUID       int `json:"uuid"`
+	UUID       string `json:"uuid"`
 	Name      string `json:"name"`
 	Email      string `json:"email"`
 	Address    string `json:"address"`
@@ -73,7 +72,7 @@ type ResponseSubmission struct {
 }
 
 type ResponseOrderRekarda struct {
-	UUID       int         `json:"uuid"`
+	UUID       string         `json:"uuid"`
 	Name      string         `json:"name"`
 	Email      string         `json:"email"`
 	Address    string         `json:"address"`
@@ -137,12 +136,15 @@ func (err Error) Error() string {
 
 
 type StatusPayment struct {
-	StatusCode string `json:"status_code"`
-	StatusMessage string `json:"status_message"`
+	Currency string `json:"currency"`
+	FraudStatus string `json:"fraud_status"`
+	GrossAmount string `json:"gross_amount"`
 	OrderID string `json:"order_id"`
 	PaymentType string `json:"payment_type"`
-	GroosAmount int64 `json:"gross_amount"`
-	TransactionTime time.Time `json:"transaction_time"`
-	TransactionExpire time.Time `json:"transaction_expire"`
+	StatusCode string `json:"status_code"`
+	StatusMessage string `json:"status_message"`
+	TransactionID string `json:"transaction_id"`
+	TransactionStatus string `json:"transaction_status"`
+	TransactionTime string `json:"transaction_time"`
 
 }

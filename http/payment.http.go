@@ -98,3 +98,37 @@ func (payment *paymentHandler) HandlingStatus(w http.ResponseWriter, r *http.Req
 		w.Write(result)
 	}
 }
+
+func (payment *paymentHandler) PaymentNotification(w http.ResponseWriter, r *http.Request) {
+	var req map[string]interface{}
+	body, errRead := ioutil.ReadAll(r.Body)
+	if errRead != nil {
+		log.Printf("Cant read body request, because: %s", errRead.Error())
+	}
+
+	json.Unmarshal(body, &req)
+
+	orderId, exist := req["order_id"].(string)
+	if !exist  {
+		w.WriteHeader(400)
+	}
+
+	sucess, _ := payment.service.NotificationStream(orderId)
+	if sucess {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "handling payments",
+			Data: req,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
+	}
+
+	w.WriteHeader(400)
+}

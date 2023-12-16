@@ -7,12 +7,12 @@ import (
 	portService "be-project/service/port"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/midtrans/midtrans-go/snap"
 )
 
@@ -41,7 +41,7 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 
 	transaction := snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID: strconv.Itoa(data.OrderID),
+			OrderID: data.OrderID,
 			GrossAmt: int64(data.Orders.Events.Price),
 		},
 		CustomerDetail: &midtrans.CustomerDetails{
@@ -90,38 +90,6 @@ func (payment *paymentService) Create(req domain.Payment) (*web.ResponsePayment,
 	if errSave != nil {
 		return nil, errSave
 	}
-	history, errHistory := payment.HandlingStatus(strconv.Itoa(req.OrderID))
-	if errHistory != nil {
-		return nil, web.Error{
-			Message: "Tidak bisa mendapatkan status payment",
-			Code: 400,
-		}
-	}
-
-	switch history.StatusCode {
-	case "200":
-		req.Orders.StatusPayment = "success"
-		err := payment.orderRepo.AppendToEvents(req)
-		if err != nil {
-			return nil, web.Error{
-				Message: "Tidak bisa menambahkanmu ke dalam events",
-				Code: 500,
-			}
-		}
-	case "201":
-		req.Orders.StatusPayment = "pending"
-		return nil, web.Error{
-			Message: "Pembayaran Pending, tunggu sebentar",
-			Code: 201,
-		}
-	case "202":
-		req.Orders.StatusPayment = "denied"
-		return nil, web.Error{
-			Message: "Pembayaran kamu ditolak",
-			Code: 202,
-		}
-
-	}
 
 	return &responseData, nil
 }
@@ -165,8 +133,7 @@ func (payment *paymentService) FindAll() ([]web.ResponseForPayment, error) {
 
 func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, error){
 
-	url := fmt.Sprintf("%s/%s/%s", payment.s.Env.BaseUrl(), id, "status")
-	req, errRequest := http.NewRequest(http.MethodGet, url, nil)
+	req, errRequest := http.NewRequest(http.MethodGet, payment.s.Env.BaseUrl() + "/v2/" + id + "/status", nil)
 	if errRequest != nil {
 		return nil, web.Error{
 			Message: "Tidak bisa request untuk mendapatkan status",
@@ -175,7 +142,7 @@ func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, 
 	}
 
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Authorization", "Basic " + base64.StdEncoding.EncodeToString([]byte(payment.s.ServerKey)))
+	req.Header.Set("Authorization", "Basic " + base64.StdEncoding.EncodeToString([]byte(payment.s.ServerKey + ":")))
 	req.Header.Set("Content-Type", "application/json")
 
 	response, err := http.DefaultClient.Do(req)
@@ -187,15 +154,49 @@ func (payment *paymentService) HandlingStatus( id string ) (*web.StatusPayment, 
 	}
 
 	defer response.Body.Close()
-
 	status := web.StatusPayment{}
 	errDecode := json.NewDecoder(response.Body).Decode(&status)
 	if errDecode != nil {
 		return nil, web.Error{
-			Message: "Tidak bisa membaca response body",
+			Message: errDecode.Error(),
 			Code: 500,
 		}
 	}
 
 	return &status, nil
+}
+
+func (payment *paymentService) NotificationStream(orderID string) (bool, error) {
+	var client coreapi.Client
+	client.New(payment.serverKey, payment.envMidtrans)
+	var order domain.Order
+
+	transactionResp, err := client.CheckTransaction(orderID)
+	if err != nil {
+		return false, web.Error{
+			Message: "Order id tidak valid",
+			Code: 400,
+		}
+	} else {
+		if transactionResp != nil {
+			if transactionResp.StatusCode == "200" {
+				order.StatusPayment = transactionResp.FraudStatus
+				_, errs := payment.orderRepo.Update(orderID, order)
+				if errs != nil {
+					return false, web.Error{
+						Message: "Cant update status payment",
+						Code: 500,
+					}
+				}
+				return true, nil
+			} else if transactionResp.TransactionStatus == "deny" {
+				return false, web.Error{
+					Message: "Pembayaran anda ditolak",
+					Code: 400,
+				}
+			}
+		}
+	}
+
+	return false, nil
 }

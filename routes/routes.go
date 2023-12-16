@@ -19,6 +19,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 
 	router.HandleFunc("/user/register/", user.Register).Methods("POST", "OPTIONS")
 	router.HandleFunc("/user/login/", user.Login).Methods("POST", "OPTIONS")
+	router.HandleFunc("/midtrans/payment-callback", payment.HandlingStatus).Methods("POST")
 	
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.JWTVerify)

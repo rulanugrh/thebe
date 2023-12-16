@@ -10,4 +10,5 @@ type PaymentInterface interface {
 	FindByID(id string) (*web.ResponseForPayment, error)
 	FindAll() ([]web.ResponseForPayment, error)
 	HandlingStatus( id string ) (*web.StatusPayment, error)
+	NotificationStream(orderID string) (bool, error)
 }

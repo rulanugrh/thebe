@@ -42,6 +42,7 @@ func (event *eventService) Create(req domain.EventRegister) (*web.ResponseEvent,
 	}
 
 	response := web.ResponseEvent{
+		ID: data.ID,
 		Name:        data.Name,
 		Description: data.Description,
 		Price:       data.Price,

@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Order struct {
 	gorm.Model
-	UUID          int                `json:"uuid" form:"uuid" gorm:"unique"`
+	UUID          string                `json:"uuid" form:"uuid" gorm:"unique"`
 	Name          string                `json:"name" form:"name"`
 	UserID        uint                  `json:"user_id" form:"user_id"`
 	UserDetail    User                  `json:"user" form:"user" gorm:"foreignKey:UserID;reference:ID"`

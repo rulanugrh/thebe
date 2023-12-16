@@ -6,7 +6,7 @@ import (
 
 type Payment struct {
 	gorm.Model
-	OrderID int `json:"order_id" validate:"required"`
+	OrderID string `json:"order_id" validate:"required"`
 	Orders  Order  `json:"order" gorm:"foreignKey:OrderID;references:UUID"`
 }
 
