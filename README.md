@@ -32,34 +32,8 @@ docker-compose up -d app
 | Webhook             | Ongoing             |
 
 ## API Documentation
-> Sebelum melakukan query ke dalam database harus membuat 2 role yaitu `Administrator` dan `Peserta` ke dalam database. Serta Untuk melakukan query bisa `register` lalu `login` terlebih dahulu.
 
-#### Create Role
-- Method : POST
-- Endpoint : `/role/`
-- Header :
-    - Content-Type : `application/json`
-    - Accept: `application/json`
-- Body :
-```json
-{
-    "name": "string",
-    "description": "text"
-}
-```
-- Response :
-```json
-{
-    "code": "number",
-    "message": "string",
-    "data": {
-        "name": "string",
-        "description": "text",
-        "user": "array",
-    }
-}
-```
-#### Create User
+#### Create User - All User
 - Method : POST
 - Endpoint : `/user/register/`
 - Header :
@@ -93,7 +67,7 @@ docker-compose up -d app
     }
 }
 ```
-#### Login User
+#### Login User - All User
 - Method : POST
 - Endpoint : `/user/login/`
 - Header :
@@ -119,13 +93,29 @@ docker-compose up -d app
     }
 }
 ```
+#### Validate Token
+- Method : POST
+- Endpoint : `/user/validate-token`
+- Header :
+    - Content-Type : `header`
+- Body :
+```http
+Set-Cookie: "token"
+```
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string"
+}
+```
 
 ## Authentication
 > Semua api wajib di tambahkan authentikasi dari hasil login user
 - Header :
     - Authorization: Token JWT
 
-#### FindByID Event
+#### FindByID Event - All User
 - Method : GET
 - Endpoint : `/api/event/{id}`
 - Header :
@@ -143,7 +133,7 @@ docker-compose up -d app
     }
 }
 ```
-#### Create Order
+#### Create Order - All User
 - Method : POST
 - Endpoint : `/api/order/`
 - Header :
@@ -174,10 +164,36 @@ docker-compose up -d app
     }
 }
 ```
-
-#### Create Submission Task
+#### Checkout Order - All User
 - Method : POST
-- Endpoint : `/api/order/`
+- Endpoint : `/api/order/checkout/`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+```json
+{
+    "order_id": "int",
+}
+
+```
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "snap_url": "string",
+        "token": "string",
+        "name": "string",
+        "event": "string",
+        "price": "int"
+    }
+}
+```
+
+#### Create Submission Task - All User
+- Method : POST
+- Endpoint : `/api/event/{id}/submission`
 - Header :
     - Accept : `application/json`
     - Content-Type : `application/json`
@@ -204,10 +220,7 @@ docker-compose up -d app
 }
 ```
 
-## Just Admin
-> Untuk query hal ini hanya admin yang bisa
-
-#### Create Event
+#### Create Event - Admin
 - Method : POST
 - Endpoint : `/api/event/`
 - Header :
@@ -235,7 +248,7 @@ docker-compose up -d app
 }
 ```
 
-#### Update Event
+#### Update Event - Admin
 - Method : PUT
 - Endpoint : `/api/event/{id}`
 - Header :
@@ -262,7 +275,7 @@ docker-compose up -d app
     }
 }
 ```
-#### FindByID Role
+#### FindByID Role - Admin
 - Method : GET
 - Endpoint : `/api/role/{id}`
 - Header :
@@ -280,7 +293,7 @@ docker-compose up -d app
     }
 }
 ```
-#### Update Role
+#### Update Role - Admin
 - Method : PUT
 - Endpoint : `/api/role/{id}`
 - Header :
