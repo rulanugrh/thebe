@@ -67,7 +67,10 @@ func (user *userRepository) FindByEmail(req domain.UserLogin) (*domain.User, err
 	
 	if err != nil {
 		log.Printf("Can't login with this email or invalid password: %s", err.Error())
-		return nil, err
+		return nil, web.Error{
+			Message: "Cant find with this email",
+			Code: 400,
+		}
 	}
 
 	req.ID = userDomain.ID

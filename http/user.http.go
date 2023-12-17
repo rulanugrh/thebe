@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"be-project/config"
 	"be-project/entity/domain"
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
@@ -69,7 +68,6 @@ func (user *userHandler) Register(w http.ResponseWriter, r *http.Request) {
 }
 func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req domain.UserLogin
-	var compare domain.User
 	body, errRead := ioutil.ReadAll(r.Body)
 	if errRead != nil {
 		log.Printf("Cant read body request, because: %s", errRead.Error())
@@ -77,10 +75,8 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body, &req)
 
 	data, err := user.service.Login(req)
-	if errChck := config.DB.Where("email = ?", req.Email).First(&compare).Error; errChck != nil {
-		log.Printf("cannot find with this email")
-	}
-	
+	req.ID = data.ID
+	req.Role = data.Role
 	if err != nil {
 		log.Printf("Cannot login to service, because: %s", err.Error())
 		response := web.WebValidationError{

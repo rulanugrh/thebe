@@ -67,10 +67,7 @@ func (user *userService) Login(req domain.UserLogin) (*web.ResponseLogin, error)
 	data, err := user.repository.FindByEmail(req)
 	if err != nil {
 		log.Printf("Cant find email to repo user: %s", err.Error())
-		return nil, web.Error{
-			Message: "email is not valid",
-			Code: 401,
-		}
+		return &web.ResponseLogin{}, err
 	} 
 
 	matchedPassword := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
