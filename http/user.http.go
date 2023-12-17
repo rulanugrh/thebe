@@ -124,6 +124,7 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			Expires: time.Now().Add(1 * time.Hour),
 			HttpOnly: true,
 			Secure: false,
+			SameSite: http.SameSiteLaxMode,
 		})
 
 		w.WriteHeader(http.StatusOK)
