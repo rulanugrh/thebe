@@ -180,7 +180,7 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 	} else {
 		if transactionResp != nil {
 			if transactionResp.StatusCode == "200" {
-				findOrder, _ := payment.orderRepo.FindByUserID(orderID)
+				findOrder, _ := payment.orderRepo.FindByUUID(orderID)
 				order.StatusPayment = transactionResp.FraudStatus
 				order.Name = findOrder.Name
 				order.UserID = findOrder.UserID

@@ -19,8 +19,9 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 
 	router.HandleFunc("/user/register/", user.Register).Methods("POST", "OPTIONS")
 	router.HandleFunc("/user/login/", user.Login).Methods("POST", "OPTIONS")
+	router.HandleFunc("/user/refresh-token/", user.RefreshToken).Methods("POST", "OPTIONS")
 	router.HandleFunc("/user/validate-token/", user.ValidateToken).Methods("POST", "OPTIONS")
-	router.HandleFunc("/midtrans/payment-callback", payment.HandlingStatus).Methods("POST")
+	router.HandleFunc("/midtrans/payment-callback/", payment.HandlingStatus).Methods("POST")
 	
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.JWTVerify)
@@ -28,13 +29,17 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	
 	routerGroup.HandleFunc("/user/", user.Update).Methods("PUT")
 	routerGroup.HandleFunc("/user/{id}", user.Delete).Methods("DELETE")
+	routerGroup.HandleFunc("/user/logout/", user.Logout).Methods("DELETE")
+
 
 	routerGroup.HandleFunc("/order/", order.Create).Methods("POST")
 	routerGroup.HandleFunc("/order/{id}", order.Update).Methods("PUT")
 	
 	routerGroup.HandleFunc("/role/{id}", role.FindByID).Methods("GET")
 	routerGroup.HandleFunc("/role/{id}", role.Update).Methods("PUT")
+	routerGroup.HandleFunc("/order/{user_id}/{uuid}", order.FindByUserIDDetail).Methods("GET")
 	routerGroup.HandleFunc("/order/{user_id}", order.FindByUserID).Methods("GET")
+	routerGroup.HandleFunc("/order/{uuid}", order.FindByUUID).Methods("GET")
 
 	routerGroup.HandleFunc("/artikel/", artikel.Create).Methods("POST")
 	routerGroup.HandleFunc("/artikel/{id}", artikel.Delete).Methods("DELETE")

@@ -70,6 +70,9 @@ func (user *userRepository) FindByEmail(req domain.UserLogin) (*domain.User, err
 		return nil, err
 	}
 
+	req.ID = userDomain.ID
+	req.Role = userDomain.Role.Name
+
 	return &userDomain, nil
 }
 

@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -63,16 +64,16 @@ func (order *orderHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
+func (order *orderHandler) FindByUUID(w http.ResponseWriter, r *http.Request) {
 	getID := mux.Vars(r)
 	parameter := getID["uuid"]
 
-	data, err := order.service.FindByUserID(parameter)
+	data, err := order.service.FindByUUID(parameter)
 	if err != nil {
 		log.Printf("Cannot find order with this id to service, because: %s", err.Error())
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
-			Message: "You cant find order with this user id",
+			Message: "You cant find order with this uuid",
 			Error: err,
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -116,7 +117,7 @@ func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 		log.Printf("You cant see this, just admin, %s", errCheck.Error())
 		response := web.ResponseFailure{
 			Code:    http.StatusForbidden,
-			Message: "You cant find role by this id",
+			Message: "You cant update by this id",
 			Error: errCheck,
 		}
 		result, errMarshalling := json.Marshal(response)
@@ -159,5 +160,83 @@ func (order *orderHandler) Update(w http.ResponseWriter, r *http.Request) {
 			w.Write(result)
 		}
 		
+	}
+}
+
+func (order *orderHandler) FindByUserID(w http.ResponseWriter, r *http.Request) {
+	getID := mux.Vars(r)
+	parameter := getID["user_id"]
+	id, _ := strconv.Atoi(parameter)
+
+	data, err := order.service.FindByUserID(uint(id))
+	if err != nil {
+		log.Printf("Cannot find order with this id to service, because: %s", err.Error())
+		response := web.ResponseFailure{
+			Code:    http.StatusBadRequest,
+			Message: "You cant find order with this user id",
+			Error: err,
+		}
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
+	}
+}
+
+func (order *orderHandler) FindByUserIDDetail(w http.ResponseWriter, r *http.Request) {
+	getIDs := mux.Vars(r)
+	parametesr := getIDs["user_id"]
+	id, _ := strconv.Atoi(parametesr)
+	
+	getID := mux.Vars(r)
+	parameter := getID["uuid"]
+
+
+	data, err := order.service.FindByUserIDDetail(parameter, uint(id))
+	if err != nil {
+		log.Printf("Cannot find order with this id to service, because: %s", err.Error())
+		response := web.ResponseFailure{
+			Code:    http.StatusBadRequest,
+			Message: "You cant find order with this user id",
+			Error: err,
+		}
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "Success find order",
+			Data:    data,
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
+		w.Write(result)
 	}
 }

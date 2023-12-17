@@ -7,5 +7,7 @@ import (
 type OrderInterface interface {
 	Create(req domain.OrderRegister) (interface{}, error)
 	Update(uuid string, req domain.Order) (interface{}, error)
-	FindByUserID(userid string) (interface{}, error)
+	FindByUUID(uuid string) (interface{}, error)
+	FindByUserID(userID uint) (interface{}, error)
+	FindByUserIDDetail(uuid string, userID uint) (interface{}, error)
 }
