@@ -228,20 +228,20 @@ func (user *userHandler) ValidateToken(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(response.Code)
+		w.Write(result)
+	} else {
+		response := web.ResponseSuccess{
+			Code:    http.StatusOK,
+			Message: "token valid",
+		}
+	
+		result, errMarshalling := json.Marshal(response)
+		if errMarshalling != nil {
+			log.Printf("Cannot marshall response")
+		}
+	
+		w.WriteHeader(http.StatusOK)
 		w.Write(result)
 	}
-
-	response := web.ResponseSuccess{
-		Code:    http.StatusOK,
-		Message: "token valid",
-	}
-
-	result, errMarshalling := json.Marshal(response)
-	if errMarshalling != nil {
-		log.Printf("Cannot marshall response")
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
 }
