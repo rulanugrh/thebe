@@ -22,14 +22,14 @@ docker-compose up -d app
 |---------------------|---------------------|
 | Authentication      | :heavy_check_mark:  |
 | Event               | :heavy_check_mark:  |
-| Payment             | Ongoing             |
+| Payment             | :heavy_check_mark:  |
 | User                | :heavy_check_mark:  |
 | Dockerize           | :heavy_check_mark:  |
 | Frontend            | Ongoing             |
 | Order               | Ongoing             |
 | Monitoring          | Ongoing             |
 | File Handler        | Ongoing             |
-| Webhook             | Ongoing             |
+| Webhook             | :heavy_check_mark:  |
 
 ## API Documentation
 
@@ -93,7 +93,28 @@ docker-compose up -d app
     }
 }
 ```
-#### Validate Token
+#### Refresh Token - All User
+- Method : POST
+- Endpoint : `/user/refresh-token/`
+- Header :
+    - Content-Type : `application/json`
+    - Accept: `application/json`
+- Body :
+- Header :
+    - Content-Type : `header`
+- Body :
+```http
+Set-Cookie: "token"
+```
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string"
+}
+```
+
+#### Validate Token - All User
 - Method : POST
 - Endpoint : `/user/validate-token`
 - Header :
@@ -108,6 +129,17 @@ Set-Cookie: "token"
     "code": "number",
     "message": "string"
 }
+```
+
+#### NotificationSteream Midtrans 
+- Method : POST
+- Endpoint : `/midtrans/payment-callback/`
+- Header :
+    - Content-Type : `application/json`
+    - Accept: `application/json`
+- Response :
+```json
+response dari midtrans, sebagai callback untuk ke midtrans
 ```
 
 ## Authentication
@@ -133,12 +165,35 @@ Set-Cookie: "token"
     }
 }
 ```
+
+#### User Logout - All User
+- Method : DELETE
+- Endpoint : `/user/logout/`
+- Header :
+    - Content-Type : `application/json`
+    - Accept: `application/json`
+- Body :
+- Header :
+    - Content-Type : `header`
+- Body :
+```http
+Set-Cookie: "token"
+```
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string"
+}
+```
+
 #### Create Order - All User
 - Method : POST
 - Endpoint : `/api/order/`
 - Header :
     - Accept : `application/json`
     - Content-Type : `application/json`
+- Body :
 ```json
 {
     "user_id": "int",
@@ -164,6 +219,82 @@ Set-Cookie: "token"
     }
 }
 ```
+
+#### FindByUUID Order - All User
+- Method : GET
+- Endpoint : `/api/order/{uuid}`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "uuid": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "string",
+        "address": "string",
+        "telephone": "string",
+        "event_name": "string",
+        "event_price": "int"
+    }
+}
+```
+
+#### FindByUserID Order - All User (  all history user )
+- Method : GET
+- Endpoint : `/api/order/{user_id}`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "uuid": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "string",
+        "address": "string",
+        "telephone": "string",
+        "event_name": "string",
+        "event_price": "int"
+    }
+}
+```
+
+#### FindByUserIDDetail Order - All User ( detail history )
+- Method : GET
+- Endpoint : `/api/order/{user_id}/{uuid}`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+
+- Response :
+```json
+{
+    "code": "number",
+    "message": "string",
+    "data": {
+        "uuid": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "string",
+        "address": "string",
+        "telephone": "string",
+        "event_name": "string",
+        "event_price": "int"
+    }
+}
+```
+
 #### Checkout Order - All User
 - Method : POST
 - Endpoint : `/api/order/checkout/`
@@ -190,7 +321,6 @@ Set-Cookie: "token"
     }
 }
 ```
-
 #### Create Submission Task - All User
 - Method : POST
 - Endpoint : `/api/event/{id}/submission`
@@ -218,6 +348,17 @@ Set-Cookie: "token"
         "filename": "string"
     }
 }
+```
+
+#### Handling Status Midtrans - Admin
+- Method : GET
+- Endpoint : `/api/order/{uuid}/status`
+- Header :
+    - Accept : `application/json`
+    - Content-Type : `application/json`
+- Response :
+```json
+response by midtrans
 ```
 
 #### Create Event - Admin

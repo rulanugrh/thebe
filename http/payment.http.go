@@ -4,6 +4,7 @@ import (
 	"be-project/entity/domain"
 	"be-project/entity/web"
 	portHandler "be-project/http/port"
+	"be-project/middleware"
 	portService "be-project/service/port"
 	"encoding/json"
 	"io/ioutil"
@@ -68,34 +69,52 @@ func (payment *paymentHandler) HandlingStatus(w http.ResponseWriter, r *http.Req
 	getID := mux.Vars(r)
 	parameter := getID["id"]
 
-	data, err := payment.service.HandlingStatus(parameter)
-	if err != nil {
-		log.Printf("Cannot find status  with this id, because: %s", err.Error())
-		response := web.WebValidationError{
-			Message: "You cant find status payments",
-			Errors:  err,
+	errCheck := middleware.ValidateTokenAdmin(r)
+	if errCheck != nil {
+		log.Printf("You cant see this, just admin, %s", errCheck.Error())
+		response := web.ResponseFailure{
+			Code:    http.StatusForbidden,
+			Message: "You cant find role by this id",
+			Error: errCheck,
 		}
 		result, errMarshalling := json.Marshal(response)
 		if errMarshalling != nil {
 			log.Printf("Cannot marshall response")
 		}
-
-		w.WriteHeader(500)
+		
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusForbidden)
 		w.Write(result)
 	} else {
-		response := web.ResponseSuccess{
-			Code:    http.StatusOK,
-			Message: "Success find order",
-			Data:    data,
-		}
+		data, err := payment.service.HandlingStatus(parameter)
+		if err != nil {
+			log.Printf("Cannot find status  with this id, because: %s", err.Error())
+			response := web.WebValidationError{
+				Message: "You cant find status payments",
+				Errors:  err,
+			}
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
 	
-		result, errMarshalling := json.Marshal(response)
-		if errMarshalling != nil {
-			log.Printf("Cannot marshall response")
+			w.WriteHeader(500)
+			w.Write(result)
+		} else {
+			response := web.ResponseSuccess{
+				Code:    http.StatusOK,
+				Message: "Success find order",
+				Data:    data,
+			}
+		
+			result, errMarshalling := json.Marshal(response)
+			if errMarshalling != nil {
+				log.Printf("Cannot marshall response")
+			}
+		
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-	
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
 	}
 }
 
