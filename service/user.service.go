@@ -37,12 +37,12 @@ func (user *userService) Register(req domain.UserRegister) (*web.ResponseUser, e
 
 	hashPassword := middleware.HashPassword(req.Password)
 	req.Password = hashPassword
+
 	data, err := user.repository.Register(req)
 	if err != nil {
 		log.Printf("Cant register to repo user: %s", err.Error())
-		errors := fmt.Sprintf("cant register, because: %s", err.Error())
 		return nil, web.Error{
-			Message: errors,
+			Message: "cant register, because email has been used",
 			Code: 400,
 		}
 	}

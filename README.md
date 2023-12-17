@@ -42,8 +42,7 @@ docker-compose up -d app
 - Body :
 ```json
 {
-    "first_name": "string",
-    "last_name": "string",
+    "name": "string",
     "email": "string",
     "password": "string",
     "address": "long",
@@ -57,8 +56,7 @@ docker-compose up -d app
     "code": "number",
     "message": "string",
     "data": {
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "password": "string",
         "address": "long",
@@ -86,8 +84,7 @@ docker-compose up -d app
     "code": "number",
     "message": "string",
     "data": {
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "token": "string"
     }
@@ -209,8 +206,7 @@ Set-Cookie: "token"
     "message": "string",
     "data": {
         "uuid": "string",
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "address": "string",
         "telephone": "string",
@@ -234,8 +230,7 @@ Set-Cookie: "token"
     "message": "string",
     "data": {
         "uuid": "string",
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "address": "string",
         "telephone": "string",
@@ -259,8 +254,7 @@ Set-Cookie: "token"
     "message": "string",
     "data": {
         "uuid": "string",
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "address": "string",
         "telephone": "string",
@@ -284,8 +278,7 @@ Set-Cookie: "token"
     "message": "string",
     "data": {
         "uuid": "string",
-        "first_name": "string",
-        "last_name": "string",
+        "name": "string",
         "email": "string",
         "address": "string",
         "telephone": "string",

@@ -30,33 +30,33 @@ func (user *userRepository) Register(req domain.UserRegister) (*domain.User, err
 	}
 
 	errFind := user.db.Where("email = ?", req.Email).Find(&models).Error
-	if errFind == nil {
-		log.Printf("Email has been used")
+	if errFind != nil {
 		return nil, web.Error{
-			Message: "Email has been used",
+			Message: "Cant create because email has been used",
 			Code: 400,
 		}
+		
+	} else {
+		err := user.db.Create(&models).Error
+		if err != nil {
+			log.Printf("Can't create user, because: %s", err.Error())
+			return nil, err
+		}
+
+		errPreload := user.db.Preload("Role").Find(&models).Error
+		if errPreload != nil {
+			log.Printf("Can't show the roles, because: %s", errPreload.Error())
+			return nil, errPreload
+		}
+
+		errAppend := user.db.Model(&models.Role).Association("Users").Append(&models)
+		if errAppend != nil {
+			log.Printf("Can't append user, because: %s", errAppend.Error())
+		}
+
+		return &models, nil
 	}
 
-	err := user.db.Create(&models).Error
-	if err != nil {
-		log.Printf("Can't create user, because: %s", err.Error())
-		return nil, err
-	}
-
-	errPreload := user.db.Preload("Role").Find(&models).Error
-	if errPreload != nil {
-		log.Printf("Can't show the roles, because: %s", errPreload.Error())
-		return nil, errPreload
-	}
-
-	errAppend := user.db.Model(&models.Role).Association("Users").Append(&models)
-	if errAppend != nil {
-		log.Printf("Can't append user, because: %s", errAppend.Error())
-	}
-
-	
-	return &models, nil
 
 }
 
