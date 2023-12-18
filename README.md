@@ -46,8 +46,7 @@ docker-compose up -d app
     "email": "string",
     "password": "string",
     "address": "long",
-    "telephone": "string",
-    "role_id": "uint"
+    "telephone": "string"
 }
 ```
 - Response :
