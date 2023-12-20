@@ -116,8 +116,10 @@ Set-Cookie: "token"
 - Header :
     - Content-Type : `header`
 - Body :
-```http
-Set-Cookie: "token"
+```json
+{
+    "token": "string",
+}
 ```
 - Response :
 ```json
