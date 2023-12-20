@@ -110,7 +110,7 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 		response := web.ResponseSuccess{
 			Code:    http.StatusOK,
 			Message: "Success login account",
-			Data:    data,
+			Data:    token,
 		}
 
 		result, errMarshalling := json.Marshal(response)
@@ -212,8 +212,16 @@ func (user *userHandler) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (user *userHandler) ValidateToken(w http.ResponseWriter, r *http.Request) {
-	resp := r.Header.Get("Set-Cookie")
-	err := middleware.ValidateToken(resp)
+	var req map[string]interface{}
+	body, errRead := ioutil.ReadAll(r.Body)
+	if errRead != nil {
+		log.Printf("Cant read body request, because: %s", errRead.Error())
+	}
+
+	json.Unmarshal(body, &req)
+
+	token, _ := req["token"].(string)
+	err := middleware.ValidateToken(token)
 	if err != nil {
 		response := web.ResponseFailure{
 			Message: "Token not valid",
