@@ -67,13 +67,13 @@ func (event *eventRepository) SubmissionTask(id uint) (*domain.SubmissionTask, e
 		return nil, err
 	}
 
-	errLoad := event.db.Preload("Events").Preload("Users").Find(&submission).Error
+	errLoad := event.db.Preload("EventDetail").Preload("UsersDetail").Find(&submission).Error
 	if errLoad != nil {
 		log.Printf("Cannot preload data, %s", errLoad.Error())
 		return nil, errLoad
 	}
 
-	errAppend := event.db.Model(&submission.Events).Association("Submission").Append(&submission)
+	errAppend := event.db.Model(&submission.EventDetail).Association("Submission").Append(&submission)
 	if errAppend != nil {
 		log.Printf("Cannot append data, %s", errAppend.Error())
 		return nil, errLoad

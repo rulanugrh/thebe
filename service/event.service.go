@@ -168,8 +168,8 @@ func (event *eventService) SubmissionTask(id uint) (*web.ResponseSubmission, err
 	}
 
 	response := web.ResponseSubmission{
-		Name:     data.Users.Name,
-		Event:    data.Events.Name,
+		Name:     data.UsersDetail.Name,
+		Event:    data.EventDetail.Name,
 		Filename: data.Files,
 	}
 
