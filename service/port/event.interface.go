@@ -9,5 +9,5 @@ type EventInterface interface {
 	Create(req domain.EventRegister) (*web.ResponseEvent, error)
 	FindByID(id uint) (interface{}, error)
 	Update(id uint, req domain.Event) (interface{}, error)
-	SubmissionTask(id uint) (*web.ResponseSubmission, error)
+	SubmissionTask(req domain.SubmissionTask) (*web.ResponseSubmission, error)
 }

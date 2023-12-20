@@ -194,16 +194,15 @@ func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request
 	var req domain.SubmissionTask
 
 	getID := mux.Vars(r)
-	parameter := getID["id"]
-	id, _ := strconv.Atoi(parameter)
+	_ = getID["id"]
 
 	filesname := helper.ReadFormFile("./submission/", w, *r)
-	req.Files = filesname
+	req.File = filesname
 
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &req)
 
-	data, err := event.service.SubmissionTask(uint(id))
+	data, err := event.service.SubmissionTask(req)
 	if err != nil {
 		response := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
@@ -229,6 +228,7 @@ func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request
 			log.Printf("Cannot marshall response")
 		}
 	
+		w.Header().Set("Content-Type", "multipart/form-data")
 		w.WriteHeader(http.StatusOK)
 		w.Write(result)
 	}

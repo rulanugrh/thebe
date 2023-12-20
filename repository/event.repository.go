@@ -35,7 +35,7 @@ func (event *eventRepository) Create(req domain.EventRegister) (*domain.Event, e
 
 func (event *eventRepository) FindByID(id uint) (*domain.Event, error) {
 	var req domain.Event
-	err := event.db.Preload("Participants.UserDetail").Where("id = ?", id).Find(&req).Error
+	err := event.db.Preload("Submissions.Users").Preload("Participants.UserDetail").Where("id = ?", id).Find(&req).Error
 	if err != nil {
 		log.Printf("Cannot find event by this id, because: %s", err.Error())
 	}
@@ -59,21 +59,25 @@ func (event *eventRepository) Update(id uint, req domain.Event) (*domain.Event, 
 	return &result, nil
 }
 
-func (event *eventRepository) SubmissionTask(id uint) (*domain.SubmissionTask, error) {
-	var submission domain.SubmissionTask
+func (event *eventRepository) SubmissionTask(req domain.SubmissionTask) (*domain.Submission, error) {
+	var submission domain.Submission
+	submission.EventID = req.EventID
+	submission.UserID = req.UserID
+	submission.Name = req.Name
+	submission.File = req.File
 	err := event.db.Create(&submission).Error
 	if err != nil {
 		log.Printf("Cannot create submission to db: %s", err.Error())
 		return nil, err
 	}
 
-	errLoad := event.db.Preload("EventDetail").Preload("UsersDetail").Find(&submission).Error
+	errLoad := event.db.Preload("Events").Preload("Users").Find(&submission).Error
 	if errLoad != nil {
 		log.Printf("Cannot preload data, %s", errLoad.Error())
 		return nil, errLoad
 	}
 
-	errAppend := event.db.Model(&submission.EventDetail).Association("Submission").Append(&submission)
+	errAppend := event.db.Model(&submission.Events).Association("Submissions").Append(&submission)
 	if errAppend != nil {
 		log.Printf("Cannot append data, %s", errAppend.Error())
 		return nil, errLoad
