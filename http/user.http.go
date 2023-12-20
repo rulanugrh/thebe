@@ -118,15 +118,6 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Cannot marshall response")
 		}
 
-		http.SetCookie(w,&http.Cookie{
-			Name:    "Set-Cookie",
-			Value:   token,
-			Expires: time.Now().Add(1 * time.Hour),
-			HttpOnly: true,
-			Secure: false,
-			SameSite: http.SameSiteLaxMode,
-		})
-
 		w.WriteHeader(http.StatusOK)
 		w.Write(result)
 	}
