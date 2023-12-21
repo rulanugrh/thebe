@@ -69,6 +69,7 @@ type ResponseSubmission struct {
 	Name     string `json:"name"`
 	Event    string `json:"event"`
 	Filename string `json:"filename"`
+	Video 	 string `json:"video"`
 }
 
 type ResponseOrderRekarda struct {

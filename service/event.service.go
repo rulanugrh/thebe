@@ -171,6 +171,7 @@ func (event *eventService) SubmissionTask(req domain.SubmissionTask) (*web.Respo
 		Name:     data.Users.Name,
 		Event:    data.Events.Name,
 		Filename: data.File,
+		Video: data.Video,
 	}
 
 	return &response, nil

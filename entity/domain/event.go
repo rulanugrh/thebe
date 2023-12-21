@@ -8,7 +8,7 @@ type Event struct {
 	Description  string           `json:"desc" form:"desc"`
 	Price        int              `json:"price" form:"price"`
 	Participants []Order          `json:"participants" form:"participants" gorm:"many2many:joined"`
-	Submissions   []Submission `json:"submissions" form:"submissions" gorm:"many2many:task"`
+	Submissions  []Submission     `json:"submissions" form:"submissions" gorm:"many2many:task"`
 }
 
 type EventRegister struct {

@@ -24,7 +24,7 @@ func GenerateToken(user domain.UserLogin) (string, error) {
 	conf := config.GetConfig()
 	time := jwt.NewNumericDate(time.Now().Add(1 * time.Hour))
 	claims := &jwtClaims{
-		Name: user.Email,
+		Name: user.Name,
 		ID: user.ID,
 		Role: user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -64,7 +64,6 @@ func ValidateToken(token string) error {
 		}
 
 	}
-
 
 	if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
 		log.Printf("token expired")

@@ -65,6 +65,8 @@ func (event *eventRepository) SubmissionTask(req domain.SubmissionTask) (*domain
 	submission.UserID = req.UserID
 	submission.Name = req.Name
 	submission.File = req.File
+	submission.Video = req.Video
+	
 	err := event.db.Create(&submission).Error
 	if err != nil {
 		log.Printf("Cannot create submission to db: %s", err.Error())
