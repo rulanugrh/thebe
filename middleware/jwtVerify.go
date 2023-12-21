@@ -17,6 +17,7 @@ type jwtClaims struct {
 	ID uint
 	Role string
 	Name string
+	Email string
 	jwt.RegisteredClaims
 }
 
@@ -27,6 +28,7 @@ func GenerateToken(user domain.UserLogin) (string, error) {
 		Name: user.Name,
 		ID: user.ID,
 		Role: user.Role,
+		Email: user.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: time,
 		},
@@ -103,7 +105,7 @@ func ValidateTokenAdmin(r *http.Request) error {
 		}
 	}
 
-	if claims.Name != conf.Admin.Email {
+	if claims.Email != conf.Admin.Email {
 		log.Printf("Cannot use, just admin")
 		return web.Error{
 			Code: 403,

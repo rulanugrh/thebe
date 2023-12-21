@@ -77,6 +77,7 @@ func (user *userHandler) Login(w http.ResponseWriter, r *http.Request) {
 	data, err := user.service.Login(req)
 	req.ID = data.ID
 	req.Role = data.Role
+	req.Name = data.Name
 	if err != nil {
 		log.Printf("Cannot login to service, because: %s", err.Error())
 		response := web.WebValidationError{

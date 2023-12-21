@@ -99,7 +99,7 @@ func RunMigration() *gorm.DB {
 	config := GetConfig()
 
 	getDB := GetConnection()
-	errs := getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.SubmissionTask{}, &domain.Payment{}, &domain.Transaction{})
+	errs := getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.DelegasiParticipant{}, &domain.Submission{}, &domain.Payment{}, &domain.Transaction{})
 	if errs != nil {
 		log.Printf("Cannot migration, because: %s", errs.Error())
 	}

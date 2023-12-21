@@ -5,18 +5,18 @@ import "gorm.io/gorm"
 type Submission struct {
 	gorm.Model
 	Name    string `json:"name" form:"name"`
-	EventID uint   `json:"event_id" form:"event_id"`
-	Events  Event  `json:"events" form:"events" gorm:"foreignKey:EventID;reference:ID"`
-	UserID  uint   `json:"user_id" form:"user_id"`
-	Users   User   `json:"users" form:"users" gorm:"foreignKey:UserID;reference:ID"`
+	IDEvent uint   `json:"id_event" form:"id_event"`
+	Events  Event  `json:"events" form:"events" gorm:"foreignKey:IDEvent;references:ID"`
+	IDUser  uint   `json:"id_user" form:"id_user"`
+	Users   User   `json:"users" form:"users" gorm:"foreignKey:IDUser;references:ID"`
 	File   string `json:"file" form:"file"`
 	Video string `json:"link_video" form:"link_video"`
 }
 
 type SubmissionTask struct {
 	Name    string `json:"name" form:"name" validate:"required"`
-	EventID uint   `json:"event_id" form:"event_id" validate:"required"`
-	UserID  uint   `json:"user_id" form:"user_id" validate:"required"`
+	IDEvent uint   `json:"id_event" form:"id_event"`
+	IDUser  uint   `json:"id_user" form:"id_user"`
 	Video string `json:"link_video" form:"link_video" validate:"required"`
 	File   string `json:"file" form:"file" validate:"required"`
 }

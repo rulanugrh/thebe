@@ -46,6 +46,8 @@ type ResponseLogin struct {
 	ID uint `json:"id"`
 	Email string `json:"email"`
 	Role string `json:"role"`
+	Name string `json:"name"`
+
 }
 
 type ResponseEvent struct {

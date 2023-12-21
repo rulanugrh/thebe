@@ -61,8 +61,8 @@ func (event *eventRepository) Update(id uint, req domain.Event) (*domain.Event, 
 
 func (event *eventRepository) SubmissionTask(req domain.SubmissionTask) (*domain.Submission, error) {
 	var submission domain.Submission
-	submission.EventID = req.EventID
-	submission.UserID = req.UserID
+	submission.IDEvent = req.IDEvent
+	submission.IDUser = req.IDUser
 	submission.Name = req.Name
 	submission.File = req.File
 	submission.Video = req.Video

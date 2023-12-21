@@ -81,6 +81,7 @@ func (user *userService) Login(req domain.UserLogin) (*web.ResponseLogin, error)
 		ID: data.ID,
 		Email: data.Email,
 		Role: data.Role.Name,
+		Name: data.Name,
 	}
 
 	return &resultData, nil
