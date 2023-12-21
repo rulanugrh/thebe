@@ -81,6 +81,18 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 		}
 	}
 
+	// var listSubmission []web.ResponseSubmission
+	// for _, sub := range data.Submissions {
+	// 	subs := web.ResponseSubmission {
+	// 		Name: sub.Name,
+	// 		Event: sub.Events.Name,
+	// 		Video: sub.Video,
+	// 		Filename: sub.File,
+	// 	}
+
+	// 	listSubmission = append(listSubmission, subs)
+	// }
+
 	if id == 2 {
 		response := web.ResponseEventRekarda{
 			Name:        data.Name,
@@ -93,10 +105,12 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 		return &response, nil
 	} else {
 		response := web.ResponseEvent{
+			ID: data.ID,
 			Name:        data.Name,
 			Description: data.Description,
 			Price:       data.Price,
 			Participant: listParticipant,
+			// Submission: listSubmission,
 		}
 
 		return &response, nil
@@ -134,6 +148,18 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 		}
 	}
 
+	// var listSubmission []web.ResponseSubmission
+	// for _, sub := range data.Submissions {
+	// 	subs := web.ResponseSubmission {
+	// 		Name: sub.Name,
+	// 		Event: sub.Events.Name,
+	// 		Video: sub.Video,
+	// 		Filename: sub.File,
+	// 	}
+
+	// 	listSubmission = append(listSubmission, subs)
+	// }
+
 	if id == 2 {
 		response := web.ResponseEventRekarda{
 			Name:        data.Name,
@@ -150,13 +176,14 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 			Description: data.Description,
 			Price:       data.Price,
 			Participant: listParticipant,
+			// Submission: listSubmission,
 		}
 
 		return &response, nil
 	}
 }
 
-func (event *eventService) SubmissionTask(req domain.SubmissionTask) (*web.ResponseSubmission, error) {
+func (event *eventService) SubmissionTask(req domain.Submission) (*web.ResponseSubmission, error) {
 	data, err := event.repository.SubmissionTask(req)
 	if err != nil {
 		log.Printf("Cannot submission task, because: %s", err.Error())

@@ -191,10 +191,7 @@ func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request) {
-	var req domain.SubmissionTask
-
-	getID := mux.Vars(r)
-	_ = getID["id"]
+	var req domain.Submission
 
 	filesname := helper.ReadFormFile("./submission/", w, *r)
 	req.File = filesname
@@ -228,7 +225,6 @@ func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request
 			log.Printf("Cannot marshall response")
 		}
 	
-		w.Header().Set("Content-Type", "multipart/form-data")
 		w.WriteHeader(http.StatusOK)
 		w.Write(result)
 	}

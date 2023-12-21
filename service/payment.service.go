@@ -7,6 +7,7 @@ import (
 	portService "be-project/service/port"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -24,12 +25,13 @@ type paymentService struct {
 	s                  snap.Client
 }
 
-func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, snaps snap.Client) portService.PaymentInterface {
+func NewPaymentService(repository portRepo.PaymentInterface, env midtrans.EnvironmentType, serverkey string, snaps snap.Client, orderRepo portRepo.OrderRepository) portService.PaymentInterface {
 	return &paymentService{
 		repository:         repository,
 		envMidtrans:        env,
 		serverKey:          serverkey,
 		s:                  snaps,
+		orderRepo: orderRepo,
 	}
 }
 
@@ -181,11 +183,14 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 		if transactionResp != nil {
 			if transactionResp.StatusCode == "200" {
 				findOrder, _ := payment.orderRepo.FindByUUID(orderID)
+				fmt.Println(findOrder)
 				order.StatusPayment = transactionResp.FraudStatus
-				order.Name = findOrder.Name
+				order.Name = "Order" + orderID
+				order.ID = findOrder.ID
 				order.UserID = findOrder.UserID
 				order.EventID = findOrder.EventID
 				order.UUID = orderID
+
 				
 				_, errs := payment.orderRepo.Update(orderID, order)
 				if errs != nil {

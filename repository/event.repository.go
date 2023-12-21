@@ -59,31 +59,25 @@ func (event *eventRepository) Update(id uint, req domain.Event) (*domain.Event, 
 	return &result, nil
 }
 
-func (event *eventRepository) SubmissionTask(req domain.SubmissionTask) (*domain.Submission, error) {
-	var submission domain.Submission
-	submission.EventID = req.EventID
-	submission.UserID = req.UserID
-	submission.Name = req.Name
-	submission.File = req.File
-	submission.Video = req.Video
+func (event *eventRepository) SubmissionTask(req domain.Submission) (*domain.Submission, error) {
 	
-	err := event.db.Create(&submission).Error
+	err := event.db.Create(&req).Error
 	if err != nil {
 		log.Printf("Cannot create submission to db: %s", err.Error())
 		return nil, err
 	}
 
-	errLoad := event.db.Preload("Events").Preload("Users").Find(&submission).Error
+	errLoad := event.db.Preload("Events").Preload("Users").Find(&req).Error
 	if errLoad != nil {
 		log.Printf("Cannot preload data, %s", errLoad.Error())
 		return nil, errLoad
 	}
 
-	errAppend := event.db.Model(&submission.Events).Association("Submissions").Append(&submission)
+	errAppend := event.db.Model(&req.Events).Where("id = ?", req.EventID).Where("order_id = ?", req.ID).Association("Submissions").Append(&req)
 	if errAppend != nil {
 		log.Printf("Cannot append data, %s", errAppend.Error())
 		return nil, errLoad
 	}
 
-	return &submission, nil
+	return &req, nil
 }

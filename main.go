@@ -25,7 +25,7 @@ func main() {
 	roleService := service.NewRoleService(roleRepository)
 	artikelService := service.NewArtikelService(artikelRepository)
 	eventService := service.NewEventServices(eventRepository)
-	paymentService := service.NewPaymentService(paymentRepository, env, serverKey, snaps)
+	paymentService := service.NewPaymentService(paymentRepository, env, serverKey, snaps, orderRepository)
 
 	userHandler := handler.NewUserHandler(userService)
 	orderHandler := handler.NewOrderHandler(orderService)

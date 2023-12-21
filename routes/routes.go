@@ -21,7 +21,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	router.HandleFunc("/user/login/", user.Login).Methods("POST", "OPTIONS")
 	router.HandleFunc("/user/refresh-token/", user.RefreshToken).Methods("POST", "OPTIONS")
 	router.HandleFunc("/user/validate-token/", user.ValidateToken).Methods("POST", "OPTIONS")
-	router.HandleFunc("/midtrans/payment-callback/", payment.HandlingStatus).Methods("POST")
+	router.HandleFunc("/midtrans/payment-callback/", payment.PaymentNotification).Methods("POST")
 	
 	routerGroup := router.PathPrefix("/api/").Subrouter()
 	routerGroup.Use(middleware.JWTVerify)
@@ -49,7 +49,7 @@ func Run(user portHandler.UserInterface, order portHandler.OrderInterface, role 
 	routerGroup.HandleFunc("/event/", event.Create).Methods("POST")
 	routerGroup.HandleFunc("/event/{id}", event.Update).Methods("PUT")
 	routerGroup.HandleFunc("/event/{id}", event.FindByID).Methods("GET")
-	routerGroup.HandleFunc("/event/{id}/submission", event.SubmissionTask).Methods("POST")
+	routerGroup.HandleFunc("/event/upload/submission/", event.SubmissionTask).Methods("POST")
 	
 	routerGroup.HandleFunc("/order/checkout/", payment.Create).Methods("POST")
 	routerGroup.HandleFunc("/order/check/{id}/status", payment.HandlingStatus).Methods("GET")
