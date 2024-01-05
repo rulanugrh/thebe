@@ -181,7 +181,7 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 		}
 	} else {
 		if transactionResp != nil {
-			if transactionResp.StatusCode == "200" {
+			if transactionResp.TransactionStatus == "settlement" {
 				findOrder, _ := payment.orderRepo.FindByUUID(orderID)
 				fmt.Println(findOrder)
 				order.StatusPayment = transactionResp.FraudStatus
@@ -191,7 +191,6 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 				order.EventID = findOrder.EventID
 				order.UUID = orderID
 
-				
 				_, errs := payment.orderRepo.Update(orderID, order)
 				if errs != nil {
 					return false, web.Error{
@@ -199,6 +198,15 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 						Code: 500,
 					}
 				}
+
+				errors := payment.orderRepo.AppendData(order)
+				if errors != nil {
+					return false, web.Error{
+						Message: "Cant append data to events",
+						Code: 500,
+					}
+				}
+				
 				return true, nil
 			} else if transactionResp.TransactionStatus == "deny" {
 				return false, web.Error{

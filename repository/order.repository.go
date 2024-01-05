@@ -45,6 +45,12 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 
 func (order *orderRepository) Update(uuid string, req domain.Order) (*domain.Order, error) {
 	var updateOrder domain.Order
+	updateOrder.EventID = req.Events.ID
+	updateOrder.UserID = req.UserID
+	updateOrder.StatusPayment = req.StatusPayment
+	updateOrder.Name  = req.Name
+	updateOrder.UUID = uuid
+	updateOrder.ID = req.ID
 	err := order.db.Model(&req).Where("uuid = ?", uuid).Updates(&updateOrder).Error
 
 	if err != nil {
@@ -52,22 +58,20 @@ func (order *orderRepository) Update(uuid string, req domain.Order) (*domain.Ord
 		return nil, err
 	}
 
-	errsPreload := order.db.Preload("UserDetail").Preload("Events").Find(&updateOrder).Error
-	if errsPreload != nil {
-		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
-		return nil, errsPreload
-	}
+	return &updateOrder, nil
+}
 
-	errAppend := order.db.Model(&req.Events).Association("Participants").Append(&updateOrder)
+func (order *orderRepository) AppendData(req domain.Order) error {
+	errAppend := order.db.Model(&req.Events).Where("id = ?", req.EventID).Association("Participants").Append(&req)
 	if errAppend != nil {
 		log.Printf("Cant append data because: %s", errAppend.Error())
-		return nil, web.Error{
+		return web.Error{
 			Message: "Cant append to events",
 			Code: 500,
 		}
 	}
-	
-	return &updateOrder, nil
+
+	return nil
 }
 
 func (order *orderRepository) FindByUUID(uuid string) (*domain.Order, error) {

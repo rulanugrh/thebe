@@ -8,4 +8,5 @@ type OrderRepository interface {
 	FindByUUID(uuid string) (*domain.Order, error)
 	FindByUserID(userID uint) ([]domain.Order, error)
 	FindByUserIDDetail(userID uint, uuid string) (*domain.Order, error)
+	AppendData(req domain.Order) error
 }

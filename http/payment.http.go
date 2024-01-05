@@ -147,7 +147,9 @@ func (payment *paymentHandler) PaymentNotification(w http.ResponseWriter, r *htt
 	
 		w.WriteHeader(http.StatusOK)
 		w.Write(result)
+	} else {
+		
+		w.WriteHeader(400)
 	}
 
-	w.WriteHeader(400)
 }
