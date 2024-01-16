@@ -193,7 +193,16 @@ func (event *eventHandler) Update(w http.ResponseWriter, r *http.Request) {
 func (event *eventHandler) SubmissionTask(w http.ResponseWriter, r *http.Request) {
 	var req domain.Submission
 
-	filesname := helper.ReadFormFile("./submission/", w, *r)
+	filesname, boundary := helper.ReadFormFile("./submission/", w, *r)
+	r.Header.Set("Content-Type", "multipart/form-data; boundary="+boundary)
+	r.ParseForm()
+	idEvent, _ := strconv.Atoi(r.FormValue("event_id"))
+	idUser, _ := strconv.Atoi(r.FormValue("user_id"))
+
+	req.EventID = uint(idEvent)
+	req.UserID = uint(idUser)
+	req.Video = r.FormValue("video")
+	req.Name = r.FormValue("name")
 	req.File = filesname
 
 	body, _ := ioutil.ReadAll(r.Body)

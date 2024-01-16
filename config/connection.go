@@ -28,7 +28,6 @@ type Config struct {
 		AllowOrigin string
 	}
 
-
 	Midtrans struct {
 		EnvironmentType string
 		Production struct {
@@ -130,17 +129,17 @@ func RunMigration() *gorm.DB {
 	}
 
 	errFind := getDB.Where("name = ?", adminRole.Name).Find(&adminRole).Error
-	if errFind == nil {
+	if errFind != nil {
 		log.Printf("Cannot create because role has been created")
 	}
 
 	errFind = getDB.Where("name = ?", pesertaRole.Name).Find(&pesertaRole).Error
-	if errFind == nil {
+	if errFind != nil {
 		log.Printf("Cannot create because role has been created")
 	}
 	
 	errFind = getDB.Where("name = ?", adminUser.Name).Find(&adminUser).Error
-	if errFind == nil {
+	if errFind != nil {
 		log.Printf("Cannot create because user has been created")
 	}
 	

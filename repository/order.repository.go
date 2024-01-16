@@ -27,6 +27,7 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 	models.EventID = req.EventID
 	models.UserID = req.EventID
 	models.Delegasi = req.Delegasi
+	models.StatusPayment = "Belum Bayar"
 
 	err := order.db.Create(&models).Error
 	if err != nil {
@@ -38,6 +39,15 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 	if errsPreload != nil {
 		log.Printf("Cant creaet order. because: %s", errsPreload.Error())
 		return nil, errsPreload
+	}
+
+	errAppend := order.db.Model(&models.Events).Association("Participants").Append(&models)
+	if errAppend != nil {
+		log.Printf("Cant append data because: %s", errAppend.Error())
+		return nil, web.Error{
+			Message: "Cant append to events",
+			Code: 500,
+		}
 	}
 
 	return &models, nil

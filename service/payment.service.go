@@ -198,14 +198,6 @@ func (payment *paymentService) NotificationStream(orderID string) (bool, error) 
 						Code: 500,
 					}
 				}
-
-				errors := payment.orderRepo.AppendData(order)
-				if errors != nil {
-					return false, web.Error{
-						Message: "Cant append data to events",
-						Code: 500,
-					}
-				}
 				
 				return true, nil
 			} else if transactionResp.TransactionStatus == "deny" {
