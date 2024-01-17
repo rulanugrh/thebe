@@ -1,15 +1,11 @@
 package config
 
 import (
-	"be-project/entity/domain"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/snap"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -74,93 +70,6 @@ func GetConnection() *gorm.DB {
 	return db
 }
 
-func InitMidtrans() ( snap.Client, midtrans.EnvironmentType, string )  {
-	var snap snap.Client
-	conf := GetConfig()
-	if conf.Midtrans.EnvironmentType == "Sandbox" {
-		midtrans.Environment = midtrans.Sandbox
-		midtrans.ServerKey = conf.Midtrans.Sandbox.Server
-		snap.Env = midtrans.Environment
-		snap.ServerKey = conf.Midtrans.Sandbox.Server
-	} else {
-		midtrans.Environment = midtrans.Production
-		midtrans.ServerKey = conf.Midtrans.Production.Server
-		snap.Env = midtrans.Environment
-		snap.ServerKey = conf.Midtrans.Production.Server
-	}
-
-	snap.New(midtrans.ServerKey, midtrans.Environment)
-	return snap, midtrans.Environment, midtrans.ServerKey
-
-}
-
-func RunMigration() *gorm.DB {
-	config := GetConfig()
-
-	getDB := GetConnection()
-	errs := getDB.AutoMigrate(&domain.Order{}, &domain.Roles{}, &domain.User{}, &domain.Event{}, &domain.Artikel{}, &domain.Submission{}, &domain.Payment{}, &domain.Transaction{})
-	if errs != nil {
-		log.Printf("Cannot migration, because: %s", errs.Error())
-	}
-
-	adminRole := domain.Roles{
-		Name:        "administrator",
-		Description: "ini adalah role admin",
-	}
-
-	pesertaRole := domain.Roles{
-		Name:        "peserta",
-		Description: "ini adalah role peserta",
-	}
-
-	bytes, err := bcrypt.GenerateFromPassword([]byte(config.Admin.Password), 14)
-	if err != nil {
-		log.Printf("Cant generate hash password: %v", err)
-	}
-
-
-	adminUser := domain.User{
-		Name:     "Admin",
-		Telephone: "_",
-		Address:   "-",
-		Email:     config.Admin.Email,
-		Password:  string(bytes),
-		RoleID:    1,
-	}
-
-	errFind := getDB.Where("name = ?", adminRole.Name).Find(&adminRole).Error
-	if errFind != nil {
-		log.Printf("Cannot create because role has been created")
-	}
-
-	errFind = getDB.Where("name = ?", pesertaRole.Name).Find(&pesertaRole).Error
-	if errFind != nil {
-		log.Printf("Cannot create because role has been created")
-	}
-	
-	errFind = getDB.Where("name = ?", adminUser.Name).Find(&adminUser).Error
-	if errFind != nil {
-		log.Printf("Cannot create because user has been created")
-	}
-	
-	errAdminRole := getDB.Create(&adminRole).Error
-	if errAdminRole != nil {
-		log.Printf("Cannot create role admin: %s", errAdminRole.Error())
-	}
-
-	errpesertaRoles := getDB.Create(&pesertaRole).Error
-	if errpesertaRoles != nil {
-		log.Printf("Cannot create role peserta: %s", errpesertaRoles.Error())
-	}
-
-	errAdmin := getDB.Create(&adminUser).Error
-	if errAdmin != nil {
-		log.Printf("Cnnot create administrator: %s", errAdmin.Error())
-	}
-
-	log.Println("Success migration and create roles & administrator")
-	return getDB
-}
 
 func GetConfig() *Config {
 	if app == nil {

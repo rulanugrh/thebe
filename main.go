@@ -1,7 +1,7 @@
 package main
 
 import (
-	"be-project/config"
+	"be-project/helper"
 	handler "be-project/http"
 	"be-project/repository"
 	"be-project/routes"
@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	getDB := config.RunMigration()
-	snaps, env, serverKey := config.InitMidtrans()
+	getDB := helper.RunMigration()
+	snaps, env, serverKey := helper.InitMidtrans()
 	// conf := config.GetConfig()
 
 	orderRepository := repository.NewOrderRepository(getDB)
