@@ -24,7 +24,7 @@ func NewOrderService(repo portRepo.OrderRepository) portService.OrderInterface {
 	}
 }
 
-func (order *orderService) Create(req domain.OrderRegister) (interface{}, error) {
+func (order *orderService) Create(req domain.OrderRegister) (*web.ResponseOrder, error) {
 	errValidate := middleware.ValidateStruct(order.validate, req)
 	if errValidate != nil {
 		log.Printf("Struct is not valid: %s", errValidate.Error())
@@ -41,7 +41,7 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 		}
 	}
 
-	resultData := web.ResponseOrderRekarda{
+	resultData := web.ResponseOrder{
 		UUID:       data.UUID,
 		Name:      data.UserDetail.Name,
 		Email:      data.UserDetail.Email,
@@ -55,7 +55,7 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 
 }
 
-func (order *orderService) Update(uuid string, req domain.Order) (interface{}, error) {
+func (order *orderService) Update(uuid string, req domain.Order) (*web.ResponseOrder, error) {
 	data, err := order.repository.Update(uuid, req)
 	if err != nil {
 		log.Printf("Cant req update to repo, because: %s", err.Error())
@@ -66,7 +66,7 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 		}
 	}
 
-	resultData := web.ResponseOrderRekarda{
+	resultData := web.ResponseOrder{
 		UUID:       data.UUID,
 		Name:      data.UserDetail.Name,
 		Email:      data.UserDetail.Email,
@@ -81,14 +81,14 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 	
 }
 
-func (order *orderService) FindByUUID(uuid string) (interface{}, error) {
+func (order *orderService) FindByUUID(uuid string) (*web.ResponseOrder, error) {
 	data, err := order.repository.FindByUUID(uuid)
 	if err != nil {
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
 		return nil, err
 	}
 
-	resultData := web.ResponseOrderRekarda{
+	resultData := web.ResponseOrder{
 		UUID:       data.UUID,
 		Name:      data.UserDetail.Name,
 		Email:      data.UserDetail.Email,
@@ -102,7 +102,7 @@ func (order *orderService) FindByUUID(uuid string) (interface{}, error) {
 	
 }
 
-func (order *orderService) FindByUserID(userID uint) (interface{}, error) {
+func (order *orderService) FindByUserID(userID uint) (*web.ResponseOrder, error) {
 	data, err := order.repository.FindByUserID(uint(userID))
 	if err != nil {
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
@@ -110,7 +110,7 @@ func (order *orderService) FindByUserID(userID uint) (interface{}, error) {
 	}
 
 	for _, res := range data{		
-		resultData := web.ResponseOrderRekarda{
+		resultData := web.ResponseOrder{
 			UUID:       res.UUID,
 			Name:      res.UserDetail.Name,
 			Email:      res.UserDetail.Email,
@@ -127,14 +127,14 @@ func (order *orderService) FindByUserID(userID uint) (interface{}, error) {
 
 }
 
-func (order *orderService) FindByUserIDDetail(uuid string, userID uint) (interface{}, error) {
+func (order *orderService) FindByUserIDDetail(uuid string, userID uint) (*web.ResponseOrder, error) {
 	data, err := order.repository.FindByUserIDDetail(userID, uuid)
 	if err != nil {
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
 		return nil, err
 	}
 	
-	resultData := web.ResponseOrderRekarda{
+	resultData := web.ResponseOrder{
 		UUID:       data.UUID,
 		Name:      data.UserDetail.Name,
 		Email:      data.UserDetail.Email,

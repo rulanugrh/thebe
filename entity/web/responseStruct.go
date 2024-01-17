@@ -64,7 +64,6 @@ type ResponseEventRekarda struct {
 	Description string            `json:"description"`
 	Price       int               `json:"price"`
 	Participant []ListParticipant `json:"participant"`
-	Delegasi    []ListDelegasi    `json:"delegasi"`
 }
 
 type ResponseSubmission struct {
@@ -74,25 +73,9 @@ type ResponseSubmission struct {
 	Video 	 string `json:"video"`
 }
 
-type ResponseOrderRekarda struct {
-	UUID       string         `json:"uuid"`
-	Name      string         `json:"name"`
-	Email      string         `json:"email"`
-	Address    string         `json:"address"`
-	Telephone  string         `json:"telephone"`
-	EventName  string         `json:"event_name"`
-	EventPrice int            `json:"event_price"`
-	Delegasi   []ListDelegasi `json:"delegasi"`
-}
-
 type ListParticipant struct {
 	Name string `json:"name"`
 	Email string `json:"email"`
-}
-
-type ListDelegasi struct {
-	Name  string `json:"name"`
-	Gender string `json:"gender"`
 }
 
 type ResponsePayment struct {

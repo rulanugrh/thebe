@@ -51,7 +51,7 @@ func (event *eventService) Create(req domain.EventRegister) (*web.ResponseEvent,
 	return &response, nil
 }
 
-func (event *eventService) FindByID(id uint) (interface{}, error) {
+func (event *eventService) FindByID(id uint) (*web.ResponseEvent, error) {
 	data, err := event.repository.FindByID(id)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
@@ -84,7 +84,7 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	// 	listSubmission = append(listSubmission, subs)
 	// }
 
-	response := web.ResponseEventRekarda{
+	response := web.ResponseEvent{
 		Name:        data.Name,
 		Description: data.Description,
 		Price:       data.Price,
@@ -94,7 +94,7 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	return &response, nil
 }
 
-func (event *eventService) Update(id uint, req domain.Event) (interface{}, error) {
+func (event *eventService) Update(id uint, req domain.Event) (*web.ResponseEvent, error) {
 	data, err := event.repository.Update(id, req)
 	if err != nil {
 		log.Printf("Cant find this id, because: %s", err.Error())
@@ -127,7 +127,7 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 	// 	listSubmission = append(listSubmission, subs)
 	// }
 
-	response := web.ResponseEventRekarda{
+	response := web.ResponseEvent{
 		Name:        data.Name,
 		Description: data.Description,
 		Price:       data.Price,
