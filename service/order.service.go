@@ -41,43 +41,18 @@ func (order *orderService) Create(req domain.OrderRegister) (interface{}, error)
 		}
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi{
-			Name:  res.Name,
-			Gender: res.Gender,
-		}
-
-		listDelegasi = append(listDelegasi, delegasi)
+	resultData := web.ResponseOrderRekarda{
+		UUID:       data.UUID,
+		Name:      data.UserDetail.Name,
+		Email:      data.UserDetail.Email,
+		Address:    data.UserDetail.Address,
+		Telephone:  data.UserDetail.Telephone,
+		EventName:  data.Events.Name,
+		EventPrice: data.Events.Price,
 	}
 
-	if req.EventID == 2 {
-		resultData := web.ResponseOrderRekarda{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-			Delegasi:   listDelegasi,
-		}
+	return &resultData, nil
 
-		return &resultData, nil
-
-	} else {
-		resultData := web.ResponseOrder{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-		}
-
-		return &resultData, nil
-	}
 }
 
 func (order *orderService) Update(uuid string, req domain.Order) (interface{}, error) {
@@ -91,43 +66,19 @@ func (order *orderService) Update(uuid string, req domain.Order) (interface{}, e
 		}
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi{
-			Name:  res.Name,
-			Gender: res.Gender,
-		}
-
-		listDelegasi = append(listDelegasi, delegasi)
+	resultData := web.ResponseOrderRekarda{
+		UUID:       data.UUID,
+		Name:      data.UserDetail.Name,
+		Email:      data.UserDetail.Email,
+		Address:    data.UserDetail.Address,
+		Telephone:  data.UserDetail.Telephone,
+		EventName:  data.Events.Name,
+		EventPrice: data.Events.Price,
 	}
 
-	if req.EventID == 2 {
-		resultData := web.ResponseOrderRekarda{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-			Delegasi:   listDelegasi,
-		}
+	return &resultData, nil
 
-		return &resultData, nil
-
-	} else {
-		resultData := web.ResponseOrder{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-		}
-
-		return &resultData, nil
-	}
+	
 }
 
 func (order *orderService) FindByUUID(uuid string) (interface{}, error) {
@@ -137,43 +88,18 @@ func (order *orderService) FindByUUID(uuid string) (interface{}, error) {
 		return nil, err
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi{
-			Name:  res.Name,
-			Gender: res.Gender,
-		}
-
-		listDelegasi = append(listDelegasi, delegasi)
+	resultData := web.ResponseOrderRekarda{
+		UUID:       data.UUID,
+		Name:      data.UserDetail.Name,
+		Email:      data.UserDetail.Email,
+		Address:    data.UserDetail.Address,
+		Telephone:  data.UserDetail.Telephone,
+		EventName:  data.Events.Name,
+		EventPrice: data.Events.Price,
 	}
 
-	if data.EventID == 2 {
-		resultData := web.ResponseOrderRekarda{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-			Delegasi:   listDelegasi,
-		}
-
-		return &resultData, nil
-
-	} else {
-		resultData := web.ResponseOrder{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-		}
-
-		return &resultData, nil
-	}
+	return &resultData, nil
+	
 }
 
 func (order *orderService) FindByUserID(userID uint) (interface{}, error) {
@@ -183,43 +109,18 @@ func (order *orderService) FindByUserID(userID uint) (interface{}, error) {
 		return nil, err
 	}
 
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data{
-		for _, delega := range res.Delegasi{
-			delegasi := web.ListDelegasi{
-				Name: delega.Name,
-				Gender: delega.Gender,
-			}
-			listDelegasi = append(listDelegasi, delegasi)
-		}		
-		if res.EventID == 2 {
-			resultData := web.ResponseOrderRekarda{
-				UUID:       res.UUID,
-				Name:      res.UserDetail.Name,
-				Email:      res.UserDetail.Email,
-				Address:    res.UserDetail.Address,
-				Telephone:  res.UserDetail.Telephone,
-				EventName:  res.Events.Name,
-				EventPrice: res.Events.Price,
-				Delegasi:   listDelegasi,
-			}
-	
-			return &resultData, nil
-	
-		} else {
-			resultData := web.ResponseOrder{
-				UUID:       res.UUID,
-				Name:      res.UserDetail.Name,
-				Email:      res.UserDetail.Email,
-				Address:    res.UserDetail.Address,
-				Telephone:  res.UserDetail.Telephone,
-				EventName:  res.Events.Name,
-				EventPrice: res.Events.Price,
-				
-			}
-	
-			return &resultData, nil
+	for _, res := range data{		
+		resultData := web.ResponseOrderRekarda{
+			UUID:       res.UUID,
+			Name:      res.UserDetail.Name,
+			Email:      res.UserDetail.Email,
+			Address:    res.UserDetail.Address,
+			Telephone:  res.UserDetail.Telephone,
+			EventName:  res.Events.Name,
+			EventPrice: res.Events.Price,
 		}
+
+		return &resultData, nil
 	}
 
 	return nil, nil
@@ -232,42 +133,16 @@ func (order *orderService) FindByUserIDDetail(uuid string, userID uint) (interfa
 		log.Printf("Cant req findbyuser id to repo, because: %s", err.Error())
 		return nil, err
 	}
-
-	var listDelegasi []web.ListDelegasi
-	for _, res := range data.Delegasi {
-		delegasi := web.ListDelegasi{
-			Name:  res.Name,
-			Gender: res.Gender,
-		}
-
-		listDelegasi = append(listDelegasi, delegasi)
+	
+	resultData := web.ResponseOrderRekarda{
+		UUID:       data.UUID,
+		Name:      data.UserDetail.Name,
+		Email:      data.UserDetail.Email,
+		Address:    data.UserDetail.Address,
+		Telephone:  data.UserDetail.Telephone,
+		EventName:  data.Events.Name,
+		EventPrice: data.Events.Price,
 	}
 
-	if data.EventID == 2 {
-		resultData := web.ResponseOrderRekarda{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-			Delegasi:   listDelegasi,
-		}
-
-		return &resultData, nil
-
-	} else {
-		resultData := web.ResponseOrder{
-			UUID:       data.UUID,
-			Name:      data.UserDetail.Name,
-			Email:      data.UserDetail.Email,
-			Address:    data.UserDetail.Address,
-			Telephone:  data.UserDetail.Telephone,
-			EventName:  data.Events.Name,
-			EventPrice: data.Events.Price,
-		}
-
-		return &resultData, nil
-	}
+	return &resultData, nil
 }

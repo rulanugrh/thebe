@@ -15,11 +15,3 @@ type EventRegister struct {
 	Description string `json:"desc" form:"desc" validate:"required"`
 	Price       int    `json:"price" form:"price" validate:"required"`
 }
-
-type DelegasiParticipant struct {
-	gorm.Model
-	Name         string `json:"name" form:"name"`
-	Gender       string `json:"gender" form:"gender"`
-	DelegasiID   uint   `json:"delegasi_id" form:"delegasi_id"`
-	DelegasiType string `json:"delegasi_type" form:"delegasi_type"`
-}

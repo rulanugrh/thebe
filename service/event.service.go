@@ -63,7 +63,6 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	}
 
 	var listParticipant []web.ListParticipant
-	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Participants {
 		participant := web.ListParticipant{
 			Name: res.UserDetail.Name,
@@ -71,14 +70,6 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 		}
 
 		listParticipant = append(listParticipant, participant)
-		for _, resDelegasi := range res.Delegasi {
-			delegasi := web.ListDelegasi{
-				Name:  resDelegasi.Name,
-				Gender: resDelegasi.Gender,
-			}
-
-			listDelegasi = append(listDelegasi, delegasi)
-		}
 	}
 
 	// var listSubmission []web.ResponseSubmission
@@ -93,29 +84,14 @@ func (event *eventService) FindByID(id uint) (interface{}, error) {
 	// 	listSubmission = append(listSubmission, subs)
 	// }
 
-	if id == 2 {
-		response := web.ResponseEventRekarda{
-			Name:        data.Name,
-			Description: data.Description,
-			Price:       data.Price,
-			Participant: listParticipant,
-			Delegasi:    listDelegasi,
-		}
-
-		return &response, nil
-	} else {
-		response := web.ResponseEvent{
-			ID: data.ID,
-			Name:        data.Name,
-			Description: data.Description,
-			Price:       data.Price,
-			Participant: listParticipant,
-			// Submission: listSubmission,
-		}
-
-		return &response, nil
+	response := web.ResponseEventRekarda{
+		Name:        data.Name,
+		Description: data.Description,
+		Price:       data.Price,
+		Participant: listParticipant,
 	}
 
+	return &response, nil
 }
 
 func (event *eventService) Update(id uint, req domain.Event) (interface{}, error) {
@@ -130,7 +106,6 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 	}
 
 	var listParticipant []web.ListParticipant
-	var listDelegasi []web.ListDelegasi
 	for _, res := range data.Participants {
 		participant := web.ListParticipant{
 			Name: res.UserDetail.Name,
@@ -138,14 +113,6 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 		}
 
 		listParticipant = append(listParticipant, participant)
-		for _, resDelegasi := range res.Delegasi {
-			delegasi := web.ListDelegasi{
-				Name:  resDelegasi.Name,
-				Gender: resDelegasi.Gender,
-			}
-
-			listDelegasi = append(listDelegasi, delegasi)
-		}
 	}
 
 	// var listSubmission []web.ResponseSubmission
@@ -160,27 +127,14 @@ func (event *eventService) Update(id uint, req domain.Event) (interface{}, error
 	// 	listSubmission = append(listSubmission, subs)
 	// }
 
-	if id == 2 {
-		response := web.ResponseEventRekarda{
-			Name:        data.Name,
-			Description: data.Description,
-			Price:       data.Price,
-			Participant: listParticipant,
-			Delegasi:    listDelegasi,
-		}
-
-		return &response, nil
-	} else {
-		response := web.ResponseEvent{
-			Name:        data.Name,
-			Description: data.Description,
-			Price:       data.Price,
-			Participant: listParticipant,
-			// Submission: listSubmission,
-		}
-
-		return &response, nil
+	response := web.ResponseEventRekarda{
+		Name:        data.Name,
+		Description: data.Description,
+		Price:       data.Price,
+		Participant: listParticipant,
 	}
+
+	return &response, nil
 }
 
 func (event *eventService) SubmissionTask(req domain.Submission) (*web.ResponseSubmission, error) {

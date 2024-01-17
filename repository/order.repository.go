@@ -26,7 +26,6 @@ func (order *orderRepository) Create(req domain.OrderRegister) (*domain.Order, e
 	models.Name = "order-" + models.UUID
 	models.EventID = req.EventID
 	models.UserID = req.EventID
-	models.Delegasi = req.Delegasi
 	models.StatusPayment = "Belum Bayar"
 
 	err := order.db.Create(&models).Error
