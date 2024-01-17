@@ -26,9 +26,9 @@ docker-compose up -d app
 | User                | :heavy_check_mark:  |
 | Dockerize           | :heavy_check_mark:  |
 | Frontend            | Ongoing             |
-| Order               | Ongoing             |
+| Order               | :heavy_check_mark:  |
 | Monitoring          | Ongoing             |
-| File Handler        | Ongoing             |
+| File Handler        | :heavy_check_mark:  |
 | Webhook             | :heavy_check_mark:  |
 
 ## API Documentation
@@ -195,8 +195,7 @@ Set-Cookie: "token"
 ```json
 {
     "user_id": "int",
-    "event_id": "int",
-    "delegasi": "array ( optional )"
+    "event_id": "int"
 }
 
 ```
